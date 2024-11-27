@@ -1,15 +1,27 @@
-import logo from './logo.svg';
-import './App.css';
-
-function App() {
-  console.log(process.env.REACT_APP_API_KEY);
-  
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import React from "react";
+import store from "./redux-setup/store";
+import { Provider } from "react-redux";
+import Register from "./pages/register";
+import Login from "./pages/login";
+import ForgotPassword from "./pages/forget";
+import DashBoard from "./pages/dashboard";
+import NotFound from "./pages/not_found";
+const App = () => {
   return (
-    <div className="App">
-      Hello world
-      {process.env.REACT_APP_API_KEY}
-    </div>
-  );
+    <Provider store={store}>
+      <BrowserRouter>
+      <Routes>
+
+        <Route path="/" element={<DashBoard/>}/>
+        <Route path="/login" element={<Login/>}/>
+        <Route path="/register" element={<Register/>}/>
+        <Route path="/forgot-password" element={<ForgotPassword/>}/>
+        <Route path="*" element={<NotFound/>}/>
+      </Routes>
+      </BrowserRouter>
+    </Provider>
+  )
 }
 
 export default App;
