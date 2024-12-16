@@ -7,6 +7,7 @@ import Login from "./pages/login";
 import ForgotPassword from "./pages/forget";
 import DashBoard from "./pages/dashboard";
 import NotFound from "./pages/not_found";
+import Restaurants from "./pages/restaurants";
 const App = () => {
   return (
     <Provider store={store}>
@@ -17,6 +18,7 @@ const App = () => {
         <Route path="/login" element={<Login/>}/>
         <Route path="/register" element={<Register/>}/>
         <Route path="/forgot-password" element={<ForgotPassword/>}/>
+        <Route path="/restaurants" element={<Restaurants/>}/>
         <Route path="*" element={<NotFound/>}/>
       </Routes>
       </BrowserRouter>
