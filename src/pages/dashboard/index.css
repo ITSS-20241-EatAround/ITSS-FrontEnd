@@ -1,0 +1,69 @@
+.home-page header {
+    background-image: url(../../../public/header-img.jpg);
+}
+
+header {
+    background-size: cover;
+    background-position: center;
+}
+
+header h1 {
+    font-size: 5rem;
+}
+
+.home-page header h1,
+.home-page header h2 {
+    text-shadow: 2px 2px 8px #ffffff;
+}
+
+
+.menu-section {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(../../utils/img/menu-img.jpg);
+    background-size: cover;
+    background-position: center;
+}
+img {
+    border-style: solid;
+    border-width: 5px;
+}
+
+@media only screen and (max-width: 768px) {
+    header h1 {
+        font-size: 4rem;
+    }
+}
+
+@media only screen and (max-width: 576px) {
+    header h1 {
+        font-size: 3rem;
+    }
+}
+
+.img-page{
+ background-image: url(../../../public/header-img.jpg); /* Đường dẫn ảnh */
+  background-size: cover;
+  background-position: center;
+  height: 100vh; /* Chiều cao toàn màn hình */
+  display: flex;
+  
+  align-items: center;
+  text-align: center;
+  color: #333;
+}
+.hero-subtitle {
+  font-size: 2rem; /* Cỡ chữ nhỏ cho tiêu đề phụ */
+  font-weight: bold;
+  color: #333; /* Màu chữ tối */
+  margin: 0; /* Xóa margin mặc định */
+  padding: 0; /* Xóa padding mặc định */
+}
+
+.hero-title {
+  font-size: 4rem; /* Cỡ chữ lớn cho tiêu đề chính */
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  margin: 0; /* Xóa margin mặc định */
+  padding: 0; /* Xóa padding mặc định */
+  color: #000; /* Màu đen cho chữ lớn */
+  
+}
