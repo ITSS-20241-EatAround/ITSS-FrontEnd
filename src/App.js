@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import React from "react";
 import store from "./redux-setup/store";
 import { Provider } from "react-redux";
@@ -11,14 +11,22 @@ const App = () => {
   return (
     <Provider store={store}>
       <BrowserRouter>
-      <Routes>
+        {/* <nav className="navbar">
+          <ul className="navbar-nav">
+            <li><Link to="/">Dashboard</Link></li>
+            <li><Link to="/login">Login</Link></li>
+            <li><Link to="/register">Register</Link></li>
+            <li><Link to="/forgot-password">Forgot Password</Link></li>
+          </ul>
+        </nav> */}
+        <Routes>
 
-        <Route path="/" element={<DashBoard/>}/>
-        <Route path="/login" element={<Login/>}/>
-        <Route path="/register" element={<Register/>}/>
-        <Route path="/forgot-password" element={<ForgotPassword/>}/>
-        <Route path="*" element={<NotFound/>}/>
-      </Routes>
+          <Route path="/" element={<DashBoard />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
       </BrowserRouter>
     </Provider>
   )

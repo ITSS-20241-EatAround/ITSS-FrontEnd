@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { removeTokenFromLocalStorage } from '../../services/localtoken';
 import { FaUserCircle } from 'react-icons/fa';
+import './header.css';
 
 const Header = () => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -36,6 +37,7 @@ const Header = () => {
                         </div>
                     )}
                 </div>
+
             </header >
         </>
     );
