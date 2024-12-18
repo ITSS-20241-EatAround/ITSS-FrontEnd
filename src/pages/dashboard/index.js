@@ -4,10 +4,22 @@ import { getTokenFromLocalStorage } from '../../services/localtoken';
 import Header from '../../shared/components/header';
 import { RestaurantSuggest, DishSuggest } from '../../services/suggestApi';
 import './index.css';
-import { ImageGallery } from '../../shared/components/ImageGallery';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import ProductCarousel from '../../shared/components/ProductCarousel'
 const DashBoard = () => {
+    const restaurants = [
+        { name: 'Nhà Hàng A', address: 'Địa chỉ A', food: 'Cơm chiên, Bánh mì Xúc Xích', img: '/restaurantA.png' },
+        { name: 'Nhà Hàng B', address: 'Địa chỉ B', food: 'Mỳ xào, Bánh bao', img: '/restaurantB.png' },
+        { name: 'Nhà Hàng C', address: 'Địa chỉ C', food: 'Phở, Bánh mì', img: '/restaurantC.png' },
+    ];
     const [currentIndex, setCurrentIndex] = useState(0);
+    const handleNext = () => {
+        setCurrentIndex((prevIndex) => (prevIndex + 1) % restaurants.length);
+    };
+
+    const handlePrev = () => {
+        setCurrentIndex((prevIndex) => (prevIndex - 1 + restaurants.length) % restaurants.length);
+    };
     const itemsPerSlide = 3;
     const navigate = useNavigate();
 
@@ -43,6 +55,7 @@ const DashBoard = () => {
     const [restaurantList, setRestaurantList] = useState([
         { name: "Restaurant A" }
     ]);
+
 
     const [foodList, setFoodList] = useState([
         { name: "Dish A" },
@@ -114,7 +127,29 @@ const DashBoard = () => {
 
                 </div>
             </div>
-            <ImageGallery />
+            <div className='restaurant-list-section py-5'>
+                <div className='container text-center'>
+                    <h2 className='fs-1 mb-5 text-uppercase fw-bold'>Danh sách nhà hàng</h2>
+                    <div className='restaurant-info-card'>
+                        <div className='row'>
+                            <div className='col-md-6'>
+                                <img src={restaurants[currentIndex].img} className='img-fluid' alt={restaurants[currentIndex].name} />
+                            </div>
+                            <div className='col-md-6 d-flex flex-column justify-content-center'>
+                                <h3 className='fs-2'>{restaurants[currentIndex].name}</h3>
+                                <p className='fs-4'>{restaurants[currentIndex].address}</p>
+                                <p className='fs-5'>{restaurants[currentIndex].food}</p>
+                            </div>
+                        </div>
+                    </div>
+                    {/* Nút chuyển nhà hàng */}
+                    <div >
+                        <button onClick={handlePrev} className="btn btn-primary position-absolute start-0 top-50 translate-middle-y">❮</button>
+                        <button onClick={handleNext} className="btn btn-primary position-absolute end-0 top-50 translate-middle-y">❯</button>
+                    </div>
+                </div>
+            </div>
+
 
         </div>
     );

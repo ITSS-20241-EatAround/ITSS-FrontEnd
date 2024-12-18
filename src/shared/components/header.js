@@ -7,14 +7,29 @@ import './header.css';
 const Header = () => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const navigate = useNavigate();
+
     return (
         <>
             {/* Header */}
             < header className="bg-black p-4 shadow-md flex justify-between items-center text-white" >
                 <div className="flex space-x-8">
-                    <Link to="/" className="text-lg font-semibold hover:bg-gray-700 px-4 py-2 rounded">Home</Link>
-                    <Link to="/restaurants" className="text-lg font-semibold hover:bg-gray-700 px-4 py-2 rounded">Danh sách nhà hàng</Link>
+                    <div className="flex space-x-8">
+                        <Link to="/" className="text-lg font-semibold hover:bg-gray-700 px-4 py-2 rounded">Home</Link>
+                        <Link to="/restaurants" className="text-lg font-semibold hover:bg-gray-700 px-4 py-2 rounded">Danh sách nhà hàng</Link>
+                    </div>
+                    <div></div>
                 </div>
+
+                <div className="flex-grow">
+                    <form className="w-full max-w-lg">
+                        <input
+                            type="text"
+                            placeholder="Tìm kiếm..."
+                            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                    </form>
+                </div>
+
                 {/* User Icon and Dropdown */}
                 <div
                     className="relative"

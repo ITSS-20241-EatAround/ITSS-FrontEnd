@@ -12,3 +12,28 @@ header {
 body {
     padding-top: 60px; /* Đảm bảo nội dung không bị che khuất bởi header */
 }
+
+
+
+input[type="text"] {
+    border: 2px solid #ddd;
+    padding: 14px 20px; 
+    border-radius: 8px; 
+    font-size: 1rem;
+    color: black; 
+    width: 100%; 
+    max-width: 800px;
+    background-color: white; 
+    transition: border-color 0.3s ease; 
+}
+
+/* Thêm hiệu ứng focus */
+input[type="text"]:focus {
+    border-color: #007bff; 
+    outline: none; 
+}
+
+form {
+    max-width: 1000px; 
+    width: 100%; 
+}

@@ -67,3 +67,48 @@ img {
   color: #000; /* Màu đen cho chữ lớn */
   
 }
+
+.restaurant-list-section {
+  position: relative; /* Để giữ các phần tử trong phạm vi này */
+}
+
+.restaurant-info-card {
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  border-radius: 8px;
+}
+
+/* Nút chuyển nhà hàng */
+button {
+  font-size: 2rem; /* Tăng kích thước nút */
+  padding: 15px 20px;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+/* Đặt các nút ở kịch góc */
+.position-fixed {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%); /* Căn giữa nút theo chiều dọc */
+  z-index: 10;
+}
+
+/* Nút trái */
+.start-0 {
+  left: 10px; /* Khoảng cách từ cạnh trái */
+}
+
+/* Nút phải */
+.end-0 {
+  right: 10px; /* Khoảng cách từ cạnh phải */
+}
+
+/* Chuyển động nút */
+.translate-middle-y {
+  transform: translateY(-50%);
+}
