@@ -24,7 +24,7 @@ const Header = () => {
                         <div className="absolute right-0 bg-gray-700 shadow-md rounded-lg mt-2 w-32">
                             <ul>
                                 <li className="px-4 py-2 text-sm hover:bg-gray-500 hover:rounded-lg cursor-pointer"
-                                    onClick={() => navigate('setting')}
+                                    onClick={() => navigate('/setting')}
                                 >Settings</li>
                                 <li className="px-4 py-2 text-sm hover:bg-gray-500 hover:rounded-lg cursor-pointer"
                                     onClick={() => {
