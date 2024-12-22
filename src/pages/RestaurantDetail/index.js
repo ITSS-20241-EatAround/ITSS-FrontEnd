@@ -1,8 +1,10 @@
 import React, { useState } from "react";
+import Header from "../../shared/components/header";
+
 const restaurant = {
   name: "Restaurant Test",
   address: "ĐHBKHN",
-  rating: "4.9 ★",
+  rating: 4.9, // Sử dụng kiểu số thay vì chuỗi
   priceRange: "20.000 - 100.000",
   image: "https://assets.gia-hanoi.com/10-1.png",
 };
@@ -38,6 +40,38 @@ const menuItems = [
   },
 ];
 
+// Component hiển thị sao dựa trên rating
+const StarRating = ({ rating }) => {
+  const fullStars = Math.floor(rating); // Số sao đầy đủ
+  const halfStar = rating - fullStars >= 0.5; // Có nửa sao không?
+  const emptyStars = 5 - fullStars - (halfStar ? 1 : 0); // Số sao rỗng
+
+  return (
+    <div className="flex items-center">
+      {/* Sao đầy đủ */}
+      {Array(fullStars)
+        .fill()
+        .map((_, i) => (
+          <span key={`full-${i}`} className="text-yellow-500 text-lg">
+            ★
+          </span>
+        ))}
+      {/* Nửa sao */}
+      {halfStar && (
+        <span className="text-yellow-500 text-lg">☆</span>
+      )}
+      {/* Sao rỗng */}
+      {Array(emptyStars)
+        .fill()
+        .map((_, i) => (
+          <span key={`empty-${i}`} className="text-gray-300 text-lg">
+            ★
+          </span>
+        ))}
+    </div>
+  );
+};
+
 const RestaurantDetail = () => {
   const [isFavorite, setIsFavorite] = useState(false);
 
@@ -46,62 +80,56 @@ const RestaurantDetail = () => {
   };
 
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
-      {/* Thông tin nhà hàng */}
-      <div className="flex items-center justify-center mb-8">
-        <div className="bg-white shadow-md p-6 rounded-lg max-w-screen-md w-full relative">
-          <div className="flex items-center gap-6">
-            <img
-              src={restaurant.image}
-              alt={restaurant.name}
-              className="w-64 h-40 object-cover rounded-lg"
-            />
-            <div>
-              <h1 className="text-2xl font-bold text-gray-800">{restaurant.name}</h1>
-              <p className="text-gray-600 mt-2">{restaurant.address}</p>
-              <p className="text-yellow-500 font-bold mt-1">
-                {restaurant.rating} 
-              </p>
-              <p className="text-gray-700 mt-1"> Giá: {restaurant.priceRange} Đ</p>
+    <>
+      <Header />
+      <div className="p-6 bg-gray-50 min-h-screen">
+        {/* Thông tin nhà hàng */}
+        <div className="flex items-center justify-center mb-8">
+          <div className="bg-white shadow-md p-6 rounded-lg max-w-screen-md w-full relative">
+            <div className="flex items-center gap-6">
+              <img
+                src={restaurant.image}
+                alt={restaurant.name}
+                className="w-64 h-40 object-cover rounded-lg"
+              />
+              <div>
+                <h1 className="text-2xl font-bold text-gray-800">{restaurant.name}</h1>
+                <p className="text-gray-600 mt-2">{restaurant.address}</p>
+                <div className="flex items-center mt-1">
+                  <StarRating rating={restaurant.rating} />
+                  <span className="ml-2 text-gray-700 font-bold">
+                    {restaurant.rating.toFixed(1)}
+                  </span>
+                </div>
+                <p className="text-gray-700 mt-1">Giá: {restaurant.priceRange} Đ</p>
+              </div>
             </div>
           </div>
+        </div>
 
-          {}
-          <button
-            onClick={toggleFavorite}
-            className="absolute bottom-4 right-4 text-3xl focus:outline-none"
-          >
-            {isFavorite ? (
-              <span className="text-red-500">❤️</span>
-            ) : (
-              <span className="text-gray-400 hover:text-red-500">🤍</span>
-            )}
-          </button>
+        {/* Danh sách món ăn */}
+        <h2 className="text-2xl font-bold mb-4 text-center">Menu</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-screen-lg mx-auto">
+          {menuItems.map((item) => (
+            <div
+              key={item.id}
+              className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-transform transform hover:-translate-y-1 flex items-center gap-4"
+            >
+              <img
+                src={item.image}
+                alt={item.name}
+                className="w-24 h-24 object-cover rounded-lg"
+              />
+              <div className="flex-1">
+                <h3 className="text-lg font-bold">{item.name}</h3>
+                <p className="text-gray-600 text-sm mt-1">{item.description}</p>
+                <p className="text-red-500 font-bold mt-2">{item.price} Đ</p>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
-
-      {/* Danh sách món ăn */}
-      <h2 className="text-2xl font-bold mb-4 text-center">Menu</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-screen-lg mx-auto">
-        {menuItems.map((item) => (
-          <div
-            key={item.id}
-            className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-transform transform hover:-translate-y-1 flex items-center gap-4"
-          >
-            <img
-              src={item.image}
-              alt={item.name}
-              className="w-24 h-24 object-cover rounded-lg"
-            />
-            <div className="flex-1">
-              <h3 className="text-lg font-bold">{item.name}</h3>
-              <p className="text-gray-600 text-sm mt-1">{item.description}</p>
-              <p className="text-red-500 font-bold mt-2">{item.price} Đ</p>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
+    </>
   );
 };
 
