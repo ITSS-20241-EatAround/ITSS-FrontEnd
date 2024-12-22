@@ -1,46 +1,7 @@
-import React, { useState } from "react";
+import React, { useState , useEffect} from "react";
 import Header from "../../shared/components/header";
-
-const restaurant = {
-  name: "Restaurant Test",
-  address: "ĐHBKHN",
-  rating: 4.9, // Sử dụng kiểu số thay vì chuỗi
-  priceRange: "20.000 - 100.000",
-  image: "https://assets.gia-hanoi.com/10-1.png",
-};
-
-const menuItems = [
-  {
-    id: 1,
-    name: "Dish 1",
-    price: "50.000",
-    description: "Dish 1",
-    image: "https://down-tx-vn.img.susercontent.com/vn-11134513-7r98o-lsv21q8k90uxa6@resize_ss640x400!@crop_w640_h400_cT",
-  },
-  {
-    id: 2,
-    name: "Dish 2",
-    price: "60.000",
-    description: "Dish 2",
-    image: "https://down-tx-vn.img.susercontent.com/vn-11134513-7r98o-lsv21q8k90uxa6@resize_ss640x400!@crop_w640_h400_cT",
-  },
-  {
-    id: 3,
-    name: "Dish 3",
-    price: "70.000",
-    description: "Dish 3",
-    image: "https://down-tx-vn.img.susercontent.com/vn-11134513-7r98o-lsv21q8k90uxa6@resize_ss640x400!@crop_w640_h400_cT",
-  },
-  {
-    id: 4,
-    name: "Dish 4",
-    price: "80.000",
-    description: "Dish 4",
-    image: "https://down-tx-vn.img.susercontent.com/vn-11134513-7r98o-lsv21q8k90uxa6@resize_ss640x400!@crop_w640_h400_cT",
-  },
-];
-
-// Component hiển thị sao dựa trên rating
+import {restaurantDetail} from "../../services/restaurantDetail";
+import { useParams } from "react-router-dom";
 const StarRating = ({ rating }) => {
   const fullStars = Math.floor(rating); // Số sao đầy đủ
   const halfStar = rating - fullStars >= 0.5; // Có nửa sao không?
@@ -71,14 +32,28 @@ const StarRating = ({ rating }) => {
     </div>
   );
 };
-
 const RestaurantDetail = () => {
-  const [isFavorite, setIsFavorite] = useState(false);
+  const { id } = useParams(); 
+  console.log(id);
+  const [dishes, setDishes] = useState([]);
+  useEffect(() => {
+    const fetchDish = async () => {
+      try {
+        const data = await restaurantDetail(id);
+        setDishes(data.data)
+        console.log(dishes)
+      } catch (error) {
+        throw error.message;
+      }
+    }
+    fetchDish();
+  }, [id])
+  if (!dishes.length) return <div>No dishes found.</div>;
 
-  const toggleFavorite = () => {
-    setIsFavorite((prev) => !prev);
-  };
-
+  // Lấy thông tin nhà hàng từ món ăn đầu tiên
+  const restaurant = dishes[0].restaurant;
+  const rating = parseFloat(restaurant.rating);
+  console.log(rating)
   return (
     <>
       <Header />
@@ -88,7 +63,7 @@ const RestaurantDetail = () => {
           <div className="bg-white shadow-md p-6 rounded-lg max-w-screen-md w-full relative">
             <div className="flex items-center gap-6">
               <img
-                src={restaurant.image}
+                src={restaurant.image_url}
                 alt={restaurant.name}
                 className="w-64 h-40 object-cover rounded-lg"
               />
@@ -96,12 +71,11 @@ const RestaurantDetail = () => {
                 <h1 className="text-2xl font-bold text-gray-800">{restaurant.name}</h1>
                 <p className="text-gray-600 mt-2">{restaurant.address}</p>
                 <div className="flex items-center mt-1">
-                  <StarRating rating={restaurant.rating} />
+                  <StarRating rating={rating} />
                   <span className="ml-2 text-gray-700 font-bold">
-                    {restaurant.rating.toFixed(1)}
+                    {rating.toFixed(1)}
                   </span>
                 </div>
-                <p className="text-gray-700 mt-1">Giá: {restaurant.priceRange} Đ</p>
               </div>
             </div>
           </div>
@@ -110,13 +84,13 @@ const RestaurantDetail = () => {
         {/* Danh sách món ăn */}
         <h2 className="text-2xl font-bold mb-4 text-center">Menu</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-screen-lg mx-auto">
-          {menuItems.map((item) => (
+          {dishes.map((item) => (
             <div
               key={item.id}
               className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-transform transform hover:-translate-y-1 flex items-center gap-4"
             >
               <img
-                src={item.image}
+                src={item.image_url}
                 alt={item.name}
                 className="w-24 h-24 object-cover rounded-lg"
               />

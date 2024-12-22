@@ -2,7 +2,7 @@ import axios from 'axios';
 import { getTokenFromLocalStorage, removeTokenFromLocalStorage } from './localtoken';
 
 const axiosInstance = axios.create({
-  baseURL: process.env.API_DEV_URL ||  "http://localhost:7200/api/v1"
+  baseURL: "http://enmutsubi-kami.myddns.me:7200/api/v1"
 });
 
 axiosInstance.interceptors.request.use(
