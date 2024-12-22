@@ -1,5 +1,28 @@
 import Header from "../../shared/components/header";
-const setting = () => {
+import { getTokenFromLocalStorage } from "../../services/localtoken";
+import {jwtDecode} from 'jwt-decode';
+import { useState, useEffect } from "react";
+const Setting = () => {
+    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
+    useEffect(() => {
+        const token = getTokenFromLocalStorage();
+        console.log(token)
+        if (token) {
+            try {
+              const decoded = jwtDecode(token);
+              console.log(decoded);
+              setUsername(decoded.name);
+              setEmail(decoded.email);
+            } catch (error) {
+              console.error("Invalid Token:", error);
+            }
+          } else {
+            console.log("No token found.");
+          }
+    }, [])
+
+
     return(
         <div>
             <Header/>
@@ -20,7 +43,7 @@ const setting = () => {
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
                         <label for="email">
                             <div className="relative flex overflow-hidden rounded-md border-2 transition focus-within:border-blue-600">
-                                <input value="Ha@" type="email" readOnly id="email"  className="w-full flex-shrink appearance-none border-gray-300 bg-white py-2 px-4 text-base text-gray-700 placeholder-gray-400 focus:outline-none" />
+                                <input value={email} type="email" readOnly id="email"  className="w-full flex-shrink appearance-none border-gray-300 bg-white py-2 px-4 text-base text-gray-700 placeholder-gray-400 focus:outline-none" />
                             </div>
                         </label>
                     </div>
@@ -29,7 +52,7 @@ const setting = () => {
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
                         <label for="name">
                             <div className="relative flex overflow-hidden rounded-md border-2 transition focus-within:border-blue-600">
-                                <input value="Ha" type="name" readOnly id="name"  className="w-full flex-shrink appearance-none border-gray-300 bg-white py-2 px-4 text-base text-gray-700 placeholder-gray-400 focus:outline-none" />
+                                <input value={username} type="name" readOnly id="name"  className="w-full flex-shrink appearance-none border-gray-300 bg-white py-2 px-4 text-base text-gray-700 placeholder-gray-400 focus:outline-none" />
                             </div>
                         </label>
                     </div>
@@ -65,4 +88,4 @@ const setting = () => {
     )
 }
 
-export default setting;
+export default Setting;
