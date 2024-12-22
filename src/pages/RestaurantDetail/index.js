@@ -1,15 +1,15 @@
-import React, { useState , useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import Header from "../../shared/components/header";
-import {restaurantDetail} from "../../services/restaurantDetail";
+import { restaurantDetail } from "../../services/restaurantDetail";
 import { useParams } from "react-router-dom";
+
 const StarRating = ({ rating }) => {
-  const fullStars = Math.floor(rating); // Số sao đầy đủ
-  const halfStar = rating - fullStars >= 0.5; // Có nửa sao không?
-  const emptyStars = 5 - fullStars - (halfStar ? 1 : 0); // Số sao rỗng
+  const fullStars = Math.floor(rating);
+  const halfStar = rating - fullStars >= 0.5;
+  const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
 
   return (
     <div className="flex items-center">
-      {/* Sao đầy đủ */}
       {Array(fullStars)
         .fill()
         .map((_, i) => (
@@ -17,11 +17,9 @@ const StarRating = ({ rating }) => {
             ★
           </span>
         ))}
-      {/* Nửa sao */}
       {halfStar && (
         <span className="text-yellow-500 text-lg">☆</span>
       )}
-      {/* Sao rỗng */}
       {Array(emptyStars)
         .fill()
         .map((_, i) => (
@@ -32,35 +30,35 @@ const StarRating = ({ rating }) => {
     </div>
   );
 };
+
 const RestaurantDetail = () => {
-  const { id } = useParams(); 
-  console.log(id);
+  const { id } = useParams();
   const [dishes, setDishes] = useState([]);
+
   useEffect(() => {
     const fetchDish = async () => {
       try {
         const data = await restaurantDetail(id);
-        setDishes(data.data)
-        console.log(dishes)
+        setDishes(data.data);
       } catch (error) {
-        throw error.message;
+        console.error(error.message);
       }
-    }
+    };
     fetchDish();
-  }, [id])
+  }, [id]);
+
   if (!dishes.length) return <div>No dishes found.</div>;
 
-  // Lấy thông tin nhà hàng từ món ăn đầu tiên
   const restaurant = dishes[0].restaurant;
   const rating = parseFloat(restaurant.rating);
-  console.log(rating)
+
   return (
     <>
       <Header />
       <div className="p-6 bg-gray-50 min-h-screen">
         {/* Thông tin nhà hàng */}
         <div className="flex items-center justify-center mb-8">
-          <div className="bg-white shadow-md p-6 rounded-lg max-w-screen-md w-full relative">
+          <div className="bg-white shadow-md p-6 rounded-lg max-w-screen-md w-full">
             <div className="flex items-center gap-6">
               <img
                 src={restaurant.image_url}
