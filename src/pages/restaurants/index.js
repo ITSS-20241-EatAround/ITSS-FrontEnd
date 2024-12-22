@@ -204,44 +204,89 @@ const Restaurants = () => {
                                 <a href="#" className="text-lg font-semibold leading-tight text-gray-900 hover:underline dark:text-white">{restaurant.name}</a>
                                     <div className="mt-2 flex items-center gap-2">
                                     <div className="flex items-center">
-            {[...Array(5)].map((_, starIndex) => (
-              <svg
-                key={starIndex}
-                className={`h-4 w-4 ${
-                  starIndex < Math.round(restaurant.rating || 0)
-                    ? "text-yellow-400"
-                    : "text-gray-300"
-                }`}
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path d="M13.8 4.2a2 2 0 0 0-3.6 0L8.4 8.4l-4.6.3a2 2 0 0 0-1.1 3.5l3.5 3-1 4.4c-.5 1.7 1.4 3 2.9 2.1l3.9-2.3 3.9 2.3c1.5 1 3.4-.4 3-2.1l-1-4.4 3.4-3a2 2 0 0 0-1.1-3.5l-4.6-.3-1.8-4.2Z" />
-              </svg>
-            ))}
-          </div>
+                                    {[...Array(5)].map((_, starIndex) => {
+                                        const rating = restaurant.rating || 0;
+                                        const isFull = starIndex < Math.floor(rating);
+                                        const isHalf = starIndex < rating && starIndex >= Math.floor(rating);
+
+                                        return (
+                                            <div key={starIndex} className="relative inline-block h-4 w-4">
+                                            
+                                            <svg
+                                                className="absolute top-0 left-0 h-4 w-4 text-gray-300"
+                                                aria-hidden="true"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                fill="currentColor"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <path d="M13.8 4.2a2 2 0 0 0-3.6 0L8.4 8.4l-4.6.3a2 2 0 0 0-1.1 3.5l3.5 3-1 4.4c-.5 1.7 1.4 3 2.9 2.1l3.9-2.3 3.9 2.3c1.5 1 3.4-.4 3-2.1l-1-4.4 3.4-3a2 2 0 0 0-1.1-3.5l-4.6-.3-1.8-4.2Z" />
+                                            </svg>
+
+                                          
+                                            <svg
+                                                className={`absolute top-0 left-0 h-4 w-4 ${
+                                                isFull || isHalf ? "text-yellow-400" : "text-transparent"
+                                                }`}
+                                                aria-hidden="true"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                fill="currentColor"
+                                                viewBox="0 0 24 24"
+                                                style={isHalf ? { clipPath: "inset(0 50% 0 0)" } : {}}
+                                            >
+                                                <path d="M13.8 4.2a2 2 0 0 0-3.6 0L8.4 8.4l-4.6.3a2 2 0 0 0-1.1 3.5l3.5 3-1 4.4c-.5 1.7 1.4 3 2.9 2.1l3.9-2.3 3.9 2.3c1.5 1 3.4-.4 3-2.1l-1-4.4 3.4-3a2 2 0 0 0-1.1-3.5l-4.6-.3-1.8-4.2Z" />
+                                            </svg>
+                                            </div>
+                                        );
+                                    })}
+
+
+                                    </div>
                     
                                         <p className="text-sm font-medium text-gray-900 dark:text-white">{restaurant.rating}</p>
                                        
                                     </div>
-                                    <ul className="mt-2 flex items-center gap-4">
-                                                <li className="flex items-center gap-2">
-                                                <svg className="h-4 w-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h6l2 4m-8-4v8m0-8V6a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v9h2m8 0H9m4 0h2m4 0h2v-4m0 0h-5m3.5 5.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0Zm-10 0a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0Z" />
-                                                </svg>
-                                                <p className="text-sm font-medium text-gray-500 dark:text-gray-400">{restaurant.address}</p>
-                                                </li>
-                    
-                                                <li className="flex items-center gap-2">
-                                                <svg className="h-4 w-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                                    <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M8 7V6c0-.6.4-1 1-1h11c.6 0 1 .4 1 1v7c0 .6-.4 1-1 1h-1M3 18v-7c0-.6.4-1 1-1h11c.6 0 1 .4 1 1v7c0 .6-.4 1-1 1H4a1 1 0 0 1-1-1Zm8-3.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z" />
-                                                </svg>
-                                                <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Distance: {Number(restaurant.distance) > 1 ? `${Number(restaurant.distance).toFixed(2)} km` : `${(Number(restaurant.distance) * 1000).toFixed(0)} m`}</p>
-                                                </li>
-                                    </ul>
+                                    <div className="mt-2">
+                                        <div className="flex items-center gap-2 mb-2">
+                                        <svg
+                                        viewBox="0 0 24 24"
+                                        fill="white"
+                                        height="1.3em"
+                                        width="1.3em"
+                                       
+                                        >
+                                        <path d="M12 2C7.589 2 4 5.589 4 9.995 3.971 16.44 11.696 21.784 12 22c0 0 8.029-5.56 8-12 0-4.411-3.589-8-8-8zm0 12c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z" />
+                                        </svg>
+                                        <p className="text-sm font-medium text-gray-500 dark:text-gray-400">{restaurant.address}</p>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                        <svg
+                                        viewBox="0 0 24 24"
+                                        fill="white"
+                                        height="1.3em"
+                                        width="1.3em"
+                                        
+                                        >
+                                        <path d="M6.5 8.11c-.89 0-1.61-.72-1.61-1.61A1.61 1.61 0 016.5 4.89c.89 0 1.61.72 1.61 1.61A1.61 1.61 0 016.5 8.11M6.5 2C4 2 2 4 2 6.5c0 3.37 4.5 8.36 4.5 8.36S11 9.87 11 6.5C11 4 9 2 6.5 2m11 6.11a1.61 1.61 0 01-1.61-1.61 1.609 1.609 0 113.22 0 1.61 1.61 0 01-1.61 1.61m0-6.11C15 2 13 4 13 6.5c0 3.37 4.5 8.36 4.5 8.36S22 9.87 22 6.5C22 4 20 2 17.5 2m0 14c-1.27 0-2.4.8-2.82 2H9.32a3 3 0 00-3.82-1.83A3.003 3.003 0 003.66 20a3.017 3.017 0 003.84 1.83c.85-.3 1.5-.98 1.82-1.83h5.37c.55 1.56 2.27 2.38 3.81 1.83A3 3 0 0020.35 18c-.43-1.2-1.57-2-2.85-2m0 4.5A1.5 1.5 0 0116 19a1.5 1.5 0 011.5-1.5A1.5 1.5 0 0119 19a1.5 1.5 0 01-1.5 1.5z" />
+                                        </svg>
+                                        <p className="text-sm font-medium text-gray-500 dark:text-gray-400">{Number(restaurant.distance) > 1 ? `${Number(restaurant.distance).toFixed(2)} km` : `${(Number(restaurant.distance) * 1000).toFixed(0)} m`}</p>
+                                        </div>
+                                    </div>
                                     <div className="mt-4 flex items-center justify-between gap-4">
-                                                <p className="text-2xl font-extrabold leading-tight text-gray-900 dark:text-white">Price: {restaurant.dishPrices.lowest}-{restaurant.dishPrices.highest}</p>
+                                        <div className="flex items-center gap-2">
+                                        <svg
+                                        viewBox="0 0 16 16"
+                                        fill="white"
+                                        height="1em"
+                                        width="1em"
+                                        
+                                        >
+                                        <path
+                                            fill="white"
+                                            d="M15.25 0h-6c-.412 0-.989.239-1.28.53L.531 7.969a.752.752 0 000 1.061l6.439 6.439a.752.752 0 001.061 0L15.47 8.03c.292-.292.53-.868.53-1.28v-6a.753.753 0 00-.75-.75zM11.5 6a1.5 1.5 0 11.001-3.001A1.5 1.5 0 0111.5 6z"
+                                        />
+                                        </svg>
+                                        <p className="text-0.8xl leading-tight text-gray-900 dark:text-white">{restaurant.dishPrices.lowest}-{restaurant.dishPrices.highest} VNĐ</p>
+                                        </div>
                                     </div>
                             </div>
                         </div>
