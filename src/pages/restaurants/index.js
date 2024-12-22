@@ -29,6 +29,7 @@ const Restaurants = () => {
         distance: "",
         rating: "",
     });
+
     const navigate = useNavigate();
     const [restaurantList, setRestaurantList] = useState([]);
     const [error, setError] = useState(null);
@@ -39,11 +40,12 @@ const Restaurants = () => {
  
     const handleFilterChange = (e) => {
         const { name, value } = e.target;
-        setFilters({
-            ...filters,
-            [name]: value,
-        });
+        setFilters((prevFilters) => ({
+            ...prevFilters,
+            [name]: prevFilters[name] === value ? "" : value, 
+        }));
     };
+
     const fetchRestaurant = async () => {
         try {
             const location = await getUserLocation();
@@ -51,7 +53,34 @@ const Restaurants = () => {
             const longitude = location.longitude;
             console.log(latitude, longitude)
             const response = await getRestaurants(latitude,longitude);
-            setRestaurantList(response.data);
+            let filteredRestaurants = response.data;
+            
+            if (filters.price) {
+                if (filters.price === "Thấp") {
+                    filteredRestaurants = filteredRestaurants.filter(restaurant => restaurant.dishPrices.highest <= 20000);
+                } else if (filters.price === "Trung bình") {
+                    filteredRestaurants = filteredRestaurants.filter(restaurant => restaurant.dishPrices.lowest> 20000 &&  restaurant.dishPrices.highest<= 50000);
+                } else if (filters.price === "Cao") {
+                    filteredRestaurants = filteredRestaurants.filter(restaurant => restaurant.dishPrices.lowest > 30000 && restaurant.dishPrices.highest<= 60000);
+                } else if (filters.price === "Rất cao") {
+                    filteredRestaurants = filteredRestaurants.filter(restaurant => restaurant.dishPrices.highest > 60000);
+                }
+            
+            }
+            if (filters.distance) {
+                filteredRestaurants = filteredRestaurants.filter(restaurant => {
+                    if (filters.distance === "< 1km") return restaurant.distance < 1;
+                    if (filters.distance === "1 - 5km") return restaurant.distance >= 1 && restaurant.distance <= 5;
+                    if (filters.distance === "5 - 10km") return restaurant.distance > 5 && restaurant.distance <= 10;
+                    if (filters.distance === "> 10km") return restaurant.distance > 10;
+                        return true;
+                });
+            }
+            if (filters.rating) {
+                const ratingValue = parseInt(filters.rating.charAt(0));
+                filteredRestaurants = filteredRestaurants.filter(restaurant => restaurant.rating >= ratingValue);
+            }
+            setRestaurantList(filteredRestaurants);
             setError(null);
         } catch (error) {
             setError("Error fetching restaurants.");
@@ -62,7 +91,10 @@ const Restaurants = () => {
         if (!token) {
             navigate('/login');
         }
-        fetchRestaurant();
+        
+            fetchRestaurant();
+ 
+
     }, [filters])
     return (
         <div>
@@ -105,7 +137,7 @@ const Restaurants = () => {
                             {["Thấp", "Trung bình", "Cao", "Rất cao"].map((price) => (
                                 <label key={price} className="block text-sm">
                                     <input
-                                        type="radio"
+                                        type="checkbox"
                                         name="price"
                                         value={price}
                                         checked={filters.price === price}
@@ -125,7 +157,7 @@ const Restaurants = () => {
                             {["< 1km", "1 - 5km", "5 - 10km", "> 10km"].map((distance) => (
                                 <label key={distance} className="block text-sm">
                                     <input
-                                        type="radio"
+                                        type="checkbox"
                                         name="distance"
                                         value={distance}
                                         checked={filters.distance === distance}
@@ -145,7 +177,7 @@ const Restaurants = () => {
                             {["1 sao", "2 sao", "3 sao", "4 sao", "5 sao"].map((rating) => (
                                 <label key={rating} className="block text-sm">
                                     <input
-                                        type="radio"
+                                        type="checkbox"
                                         name="rating"
                                         value={rating}
                                         checked={filters.rating === rating}
@@ -155,25 +187,6 @@ const Restaurants = () => {
                                     {rating}
                                 </label>
                             ))}
-                        </div>
-
-                       
-                        <div className="flex justify-between">
-                            <button
-                                onClick={() => {
-                                    console.log("Filters applied:", filters);
-                                    toggleFilter();
-                                }}
-                                className="rounded bg-blue-500 px-3 py-1 text-white text-sm hover:bg-blue-600"
-                            >
-                                Áp dụng
-                            </button>
-                            <button
-                                onClick={toggleFilter}
-                                className="rounded bg-gray-300 px-3 py-1 text-gray-700 text-sm hover:bg-gray-400"
-                            >
-                                Đóng
-                            </button>
                         </div>
                     </div>
                 </Draggable>
