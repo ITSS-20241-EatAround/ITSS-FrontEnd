@@ -1,79 +1,42 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "../../shared/components/header";
 import Draggable from "react-draggable";
-const restaurantList = [
-    {
-      restaurant_id: 1,
-      name: "Sushi Heaven",
-      address: "123 Tokyo Street, Shibuya, Tokyo",
-      contact: "080-1234-5678",
-      menu: "Sushi, Sashimi, Ramen",
-      rating: 4.75,
-      image_url: "https://cdn.tgdd.vn/2020/10/CookProduct/Sushi-la-gi-co-tot-khong-nhung-loai-sushi-tot-va-khong-tot-cho-suc-khoe-1-1200x676.jpg",
-      latitude: 35.658034,
-      longitude: 139.701636,
-    },
-    {
-      restaurant_id: 2,
-      name: "Pizza Palace",
-      address: "456 Italian Road, Osaka",
-      contact: "06-9876-5432",
-      menu: "Pepperoni Pizza, Margherita Pizza, Pasta",
-      rating: 4.50,
-      image_url: "https://upload.wikimedia.org/wikipedia/commons/a/a3/Eq_it-na_pizza-margherita_sep2005_sml.jpg",
-      latitude: 34.693738,
-      longitude: 135.502165,
-    },
-    {
-      restaurant_id: 3,
-      name: "BBQ Master",
-      address: "789 BBQ Lane, Fukuoka",
-      contact: "092-1111-2222",
-      menu: "Grilled Beef, Pork Ribs, Smoked Chicken",
-      rating: 4.25,
-      image_url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQj7VIISViQs1-cWrHkuOmx0km6hHa0eYh5HA&s",
-      latitude: 33.590355,
-      longitude: 130.401716,
-    },
-    {
-      restaurant_id: 4,
-      name: "Vegan Delights",
-      address: "321 Green Avenue, Kyoto",
-      contact: "075-3333-4444",
-      menu: "Vegan Salad, Vegetable Curry, Tofu Stir Fry",
-      rating: 4.80,
-      image_url: "https://www.happyway.com.au/cdn/shop/articles/bright_colored_foods-808927.jpg?v=1674614608",
-      latitude: 35.011564,
-      longitude: 135.768148,
-    },
-    {
-      restaurant_id: 5,
-      name: "Seafood Paradise",
-      address: "987 Ocean Drive, Okinawa",
-      contact: "098-5555-6666",
-      menu: "Lobster, Grilled Shrimp, Sushi",
-      rating: 4.60,
-      image_url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYfmWL3tkbxJvmCcMyy5GAdXc7vJF3CGbOCw&s",
-      latitude: 26.212401,
-      longitude: 127.680932,
-    },
-  ];
+import { getRestaurants } from "../../services/restaurantAPI";
+import { getTokenFromLocalStorage } from "../../services/localtoken";
+import { useNavigate } from 'react-router-dom';
+function getUserLocation() {
+    return new Promise((resolve, reject) => {
+        if(!navigator.geolocation){
+            return reject(new Error('Cannot get location'));
+        }
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                resolve({
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude,
+                });
+            },
+            (error) => {
+                reject(error.message);
+            }
+        )
+    })
+}
 const Restaurants = () => {
     const [isFilterOpen, setIsFilterOpen] = useState(false);
-
-   
-    const toggleFilter = () => {
-        setIsFilterOpen(!isFilterOpen);
-    };
-
- 
     const [filters, setFilters] = useState({
         price: "",
         distance: "",
         rating: "",
     });
-
-
+    const navigate = useNavigate();
+    const [restaurantList, setRestaurantList] = useState([]);
+    const [error, setError] = useState(null);
+    const toggleFilter = () => {
+        setIsFilterOpen(!isFilterOpen);
+    };
+    
+ 
     const handleFilterChange = (e) => {
         const { name, value } = e.target;
         setFilters({
@@ -81,6 +44,26 @@ const Restaurants = () => {
             [name]: value,
         });
     };
+    const fetchRestaurant = async () => {
+        try {
+            const location = await getUserLocation();
+            const latitude = location.latitude;
+            const longitude = location.longitude;
+            console.log(latitude, longitude)
+            const response = await getRestaurants(latitude,longitude);
+            setRestaurantList(response.data);
+            setError(null);
+        } catch (error) {
+            setError("Error fetching restaurants.");
+        }
+    };
+    useEffect(() => {
+        const token = getTokenFromLocalStorage();
+        if (!token) {
+            navigate('/login');
+        }
+        fetchRestaurant();
+    }, [filters])
     return (
         <div>
             <Header/>
@@ -240,7 +223,7 @@ const Restaurants = () => {
           </div>
                     
                                         <p className="text-sm font-medium text-gray-900 dark:text-white">{restaurant.rating}</p>
-                                        <p className="text-sm font-medium text-gray-500 dark:text-gray-400">(455)</p>
+                                       
                                     </div>
                                     <ul className="mt-2 flex items-center gap-4">
                                                 <li className="flex items-center gap-2">
@@ -254,11 +237,11 @@ const Restaurants = () => {
                                                 <svg className="h-4 w-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                                     <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M8 7V6c0-.6.4-1 1-1h11c.6 0 1 .4 1 1v7c0 .6-.4 1-1 1h-1M3 18v-7c0-.6.4-1 1-1h11c.6 0 1 .4 1 1v7c0 .6-.4 1-1 1H4a1 1 0 0 1-1-1Zm8-3.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z" />
                                                 </svg>
-                                                <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Best Price</p>
+                                                <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Distance: {Number(restaurant.distance) > 1 ? `${Number(restaurant.distance).toFixed(2)} km` : `${(Number(restaurant.distance) * 1000).toFixed(0)} m`}</p>
                                                 </li>
                                     </ul>
                                     <div className="mt-4 flex items-center justify-between gap-4">
-                                                <p className="text-2xl font-extrabold leading-tight text-gray-900 dark:text-white">$1,699</p>
+                                                <p className="text-2xl font-extrabold leading-tight text-gray-900 dark:text-white">Price: {restaurant.dishPrices.lowest}-{restaurant.dishPrices.highest}</p>
                                     </div>
                             </div>
                         </div>
