@@ -3,8 +3,8 @@ const setting = () => {
     return(
         <div>
             <Header/>
-            <div className="flex items-center justify-center dark:bg-gray-900">
-            <div className="mx-4 max-w-screen-xl sm:mx-8 xl:mx-auto mb-5">
+            <div className="flex items-center justify-center min-h-screen dark:bg-gray-900">
+            <div className="mx-4 max-w-screen-xl sm:mx-8 xl:mx-auto mb-5 translate-x-12">
             <h1 className=" py-5 text-4xl font-semibold text-white">Settings</h1>
             <div className="grid grid-cols-8 pt-3 sm:grid-cols-10">
                 <div className="col-span-8 overflow-hidden rounded-xl sm:bg-gray-50 sm:px-8 sm:shadow dark:bg-gray-700">
@@ -18,9 +18,18 @@ const setting = () => {
                     <hr className="mt-4 mb-8" />
                     <p className="py-2 text-xl font-semibold text-white">Email Address</p>
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-                        <label for="login-password">
+                        <label for="email">
                             <div className="relative flex overflow-hidden rounded-md border-2 transition focus-within:border-blue-600">
                                 <input value="Ha@" type="email" readOnly id="email"  className="w-full flex-shrink appearance-none border-gray-300 bg-white py-2 px-4 text-base text-gray-700 placeholder-gray-400 focus:outline-none" />
+                            </div>
+                        </label>
+                    </div>
+                    <hr className="mt-4 mb-8" />
+                    <p className="py-2 text-xl font-semibold text-white">Name User</p>
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                        <label for="name">
+                            <div className="relative flex overflow-hidden rounded-md border-2 transition focus-within:border-blue-600">
+                                <input value="Ha" type="name" readOnly id="name"  className="w-full flex-shrink appearance-none border-gray-300 bg-white py-2 px-4 text-base text-gray-700 placeholder-gray-400 focus:outline-none" />
                             </div>
                         </label>
                     </div>
