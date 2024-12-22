@@ -29,7 +29,7 @@ const Header = () => {
                                 <li className="px-4 py-2 text-sm hover:bg-gray-500 hover:rounded-lg cursor-pointer"
                                     onClick={() => {
                                         removeTokenFromLocalStorage();
-                                        navigate('login');
+                                        navigate('/login');
                                     }}
                                 >Logout</li>
                             </ul>
