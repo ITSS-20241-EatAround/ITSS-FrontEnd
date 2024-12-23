@@ -2,8 +2,14 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { removeTokenFromLocalStorage } from '../../services/localtoken';
 import { FaUserCircle } from 'react-icons/fa';
-
+import Draggable from "react-draggable";
 const Header = () => {
+    const [isFilterOpen, setIsFilterOpen] = useState(false);
+    const [filters, setFilters] = useState({
+        price: "",
+        distance: "",
+        rating: "",
+    });
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [keyword, setKeyword] = useState('');
     const navigate = useNavigate();
@@ -13,6 +19,18 @@ const Header = () => {
             navigate(`/search/${keyword}`); 
         }
     }
+    const toggleFilter = () => {
+        setIsFilterOpen(!isFilterOpen);
+    };
+    
+ 
+    const handleFilterChange = (e) => {
+        const { name, value } = e.target;
+        setFilters((prevFilters) => ({
+            ...prevFilters,
+            [name]: prevFilters[name] === value ? "" : value, 
+        }));
+    };
     return (
         <>
             {/* Header */}
@@ -43,6 +61,89 @@ const Header = () => {
                             <span class="sr-only">Search</span>
                         </button>
                     </form>
+                    <div className='mt-1'>
+                        <button type="button" onClick={toggleFilter} className="flex items-center justify-center rounded-lg border border-gray-200 bg-sky-500 px-3 py-2 text-sm font-medium text-gray-900 hover:bg-sky-600 sm:w-auto">
+                        <svg
+                        className="-ms-0.5 me-2 h-4 w-4"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        >
+                        <path
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeWidth="2"
+                        d="M18.796 4H5.204a1 1 0 0 0-.753 1.659l5.302 6.058a1 1 0 0 1 .247.659v4.874a.5.5 0 0 0 .2.4l3 2.25a.5.5 0 0 0 .8-.4v-7.124a1 1 0 0 1 .247-.659l5.302-6.059c.566-.646.106-1.658-.753-1.658Z"
+                        />
+                        </svg>
+                            Filters
+                        </button>
+                        {isFilterOpen && (
+                            <div className="absolute mt-5 w-48 rounded-lg border border-gray-300 bg-white shadow-lg p-4">
+                                <h3 className="text-lg font-semibold mb-2 text-gray-700 ">
+                                    Bộ lọc
+                                </h3>
+                            <div className="mb-3">
+                                <h4 className="text-sm font-medium text-gray-600">
+                                    Khoảng giá
+                                </h4>
+                                {["Thấp", "Trung bình", "Cao", "Rất cao"].map((price) => (
+                                <label key={price} className="block text-gray-600">
+                                    <input
+                                    type="checkbox"
+                                    name="price"
+                                    value={price}
+                                    checked={filters.price === price}
+                                    onChange={handleFilterChange}
+                                    className="mr-2 "
+                                    />
+                                    {price}
+                                </label>
+                                ))}
+                            </div>
+                            <div className="mb-3">
+                                    <h4 className="text-sm font-medium text-gray-600">
+                                        Khoảng cách
+                                    </h4>
+                                    {["< 1km", "1 - 5km", "5 - 10km", "> 10km"].map((distance) => (
+                                        <label key={distance} className="block text-gray-600">
+                                            <input
+                                                type="checkbox"
+                                                name="distance"
+                                                value={distance}
+                                                checked={filters.distance === distance}
+                                                onChange={handleFilterChange}
+                                                className="mr-2"
+                                            />
+                                            {distance}
+                                        </label>
+                                    ))}
+                                </div>
+                                        
+                                           
+                                            <div className="mb-3">
+                                                <h4 className="text-sm font-medium text-gray-600">
+                                                    Đánh giá
+                                                </h4>
+                                                {["1 sao", "2 sao", "3 sao", "4 sao", "5 sao"].map((rating) => (
+                                                    <label key={rating} className="block text-gray-600">
+                                                        <input
+                                                            type="checkbox"
+                                                            name="rating"
+                                                            value={rating}
+                                                            checked={filters.rating === rating}
+                                                            onChange={handleFilterChange}
+                                                            className="mr-2"
+                                                        />
+                                                        {rating}
+                                                    </label>
+                                                ))}
+                                            </div>
+                                        </div>
+                                   
+                                )}
+                                    </div>
                 </div>
                 {/* User Icon and Dropdown */}
                 <div
