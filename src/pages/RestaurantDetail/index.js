@@ -1,5 +1,6 @@
 import React, { useState , useEffect} from "react";
 import Header from "../../shared/components/header";
+import List from "../../shared/components/list"
 import {restaurantDetail} from "../../services/restaurantDetail";
 import { useParams } from "react-router-dom";
 const StarRating = ({ rating }) => {
@@ -81,26 +82,7 @@ const RestaurantDetail = () => {
         </div>
 
         {/* Danh sách món ăn */}
-        <h2 className="text-2xl font-bold mb-4 text-center">Menu</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-screen-lg mx-auto">
-          {dishes.map((item) => (
-            <div
-              key={item.id}
-              className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-transform transform hover:-translate-y-1 flex items-center gap-4"
-            >
-              <img
-                src={item.image_url}
-                alt={item.name}
-                className="w-24 h-24 object-cover rounded-lg"
-              />
-              <div className="flex-1">
-                <h3 className="text-lg font-bold">{item.name}</h3>
-                <p className="text-gray-600 text-sm mt-1">{item.description}</p>
-                <p className="text-red-500 font-bold mt-2">{item.price} Đ</p>
-              </div>
-            </div>
-          ))}
-        </div>
+        <List id={id}/>
       </div>
     </>
   );
