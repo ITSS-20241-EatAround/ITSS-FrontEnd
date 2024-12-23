@@ -1,11 +1,17 @@
 import Http from "./http";
-export const search = async (keyword) => {
+
+export const search = async (keyword, filters = {}) => {
     try {
         const response = await Http.get(`/dish/search`, {
-            params: {keyword}
+            params: {
+                keyword,
+                ...filters,
+            },
         });
         return response.data;
     } catch (error) {
-        throw error.message;
+        console.error("Error in search API:", error.message);
+        throw error;
     }
-}
+};
+

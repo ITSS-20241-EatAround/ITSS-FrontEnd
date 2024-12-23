@@ -1,24 +1,32 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams} from "react-router-dom";
 import {search} from "../../services/search";
 import Header from "../../shared/components/header";
 const Search = () => {
-    const {keyword} = useParams();
+    const {keyword,  latitude, longitude } = useParams();
     const[results, setResult] = useState([]);
-    
+    const [searchParams] = useSearchParams();
     useEffect(() => {
         const fetchSearch = async () => {
             try {
-                const response = await search(keyword);
-                setResult(response.data);
+                const filters = {
+                    latitude: latitude || null,
+                    longitude: longitude || null,
+                    price: searchParams.get("minPrice") || null,
+                    distance: searchParams.get("distance") || null,
+                    rating: searchParams.get("rating") || null,
+                };
+                const response = await search(keyword, filters);
+                setResult(response);
             } catch (error) {
-                console.log(error.message);
+                console.error("Error fetching search results:", error.message);
             }
-        }
-        if(keyword){
+        };
+
+        if (keyword) {
             fetchSearch();
         }
-    }, [keyword])
+    }, [keyword, latitude, longitude, searchParams]);
     return(
         <>
         <Header/>
