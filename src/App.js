@@ -27,7 +27,7 @@ const App = () => {
         <Route path="*" element={<NotFound/>}/>
         <Route path="/restaurant-detail/:id" element={<RestaurantDetail />} />
         <Route path="/dish-detail/:id" element={<DishDetail />} />
-        <Route path="/search/:keyword/:latitude?/:longitude?" element={<Search />}/>
+        <Route path="/search" element={<Search />}/>
 
 
       </Routes>
