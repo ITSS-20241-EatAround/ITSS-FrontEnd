@@ -113,7 +113,9 @@ const RestaurantDetail = () => {
                 className="flex justify-between items-center bg-gray-50 p-4 rounded-lg shadow h-32"
               >
                 <div className="flex-shrink-0 w-48 h-24 flex items-center justify-center">
+                  
                   <img
+                    onClick={()=>{navigate(`/dish-detail/${item.dish_id}`)}}
                     src={
                       item.image_url ||
                       "https://beptueu.vn/hinhanh/tintuc/top-15-hinh-anh-mon-an-ngon-viet-nam-khien-ban-khong-the-roi-mat-1.jpg"
@@ -122,7 +124,17 @@ const RestaurantDetail = () => {
                     className="rounded-lg max-h-full"
                   />
                 </div>
-                <span className="text-gray-800 font-medium">{item.name}</span>
+                <ul>
+                  <li>
+                    <a onClick={()=>{navigate(`/dish-detail/${item.dish_id}`)}} className="text-gray-800 font-medium">
+                    {item.name}
+                    </a>
+                  </li>
+                  <li>
+                    <span className="text-gray-500">{item.description}</span>
+                  </li>
+                </ul>
+                
                 <span className="text-blue-600 font-semibold">{Number(item.price)} VNĐ</span>
               </li>
             ))}
