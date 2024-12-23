@@ -9,6 +9,9 @@ import DashBoard from "./pages/dashboard";
 import NotFound from "./pages/not_found";
 import RestaurantDetail from "./pages/RestaurantDetail";
 import DishDetail from "./pages/dish_detail";
+import Restaurants from "./pages/restaurant";
+import Setting from "./pages/setting";
+import Search from "./pages/search";
 const App = () => {
   return (
     <Provider store={store}>
@@ -19,9 +22,12 @@ const App = () => {
         <Route path="/login" element={<Login/>}/>
         <Route path="/register" element={<Register/>}/>
         <Route path="/forgot-password" element={<ForgotPassword/>}/>
+        <Route path="/restaurants" element={<Restaurants/>}/>
+        <Route path="/setting" element={<Setting/>}/>
         <Route path="*" element={<NotFound/>}/>
         <Route path="/restaurant-detail/:id" element={<RestaurantDetail />} />
         <Route path="/dish-detail/:id" element={<DishDetail />} />
+        <Route path="/search/:keyword" element={<Search />} />
       </Routes>
       </BrowserRouter>
     </Provider>

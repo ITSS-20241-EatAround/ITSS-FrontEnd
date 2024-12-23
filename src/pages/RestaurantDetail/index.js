@@ -63,7 +63,7 @@ const RestaurantDetail = () => {
           <div className="bg-white shadow-md p-6 rounded-lg max-w-screen-md w-full relative">
             <div className="flex items-center gap-6">
               <img
-                src={restaurant.image_url}
+                src={restaurant.image_url || "https://posapp.vn/wp-content/uploads/2020/09/%C4%91%E1%BB%93ng-b%E1%BB%99-n%E1%BB%99i-th%E1%BA%A5t.jpg"}
                 alt={restaurant.name}
                 className="w-64 h-40 object-cover rounded-lg"
               />
