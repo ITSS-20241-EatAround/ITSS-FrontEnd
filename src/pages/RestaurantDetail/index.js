@@ -34,7 +34,6 @@ const StarRating = ({ rating }) => {
 };
 const RestaurantDetail = () => {
   const { id } = useParams(); 
-  console.log(id);
   const [dishes, setDishes] = useState([]);
   useEffect(() => {
     const fetchDish = async () => {

@@ -8,3 +8,5 @@ export const restaurantDetail = async (id) => {
         throw error;
     }
 }
+
+export const getDishById = (id, config) => Http.get(`/dish/get-by-id/${id}`, config);

@@ -8,6 +8,7 @@ import ForgotPassword from "./pages/forget";
 import DashBoard from "./pages/dashboard";
 import NotFound from "./pages/not_found";
 import RestaurantDetail from "./pages/RestaurantDetail";
+import DishDetail from "./pages/dish_detail";
 const App = () => {
   return (
     <Provider store={store}>
@@ -20,6 +21,7 @@ const App = () => {
         <Route path="/forgot-password" element={<ForgotPassword/>}/>
         <Route path="*" element={<NotFound/>}/>
         <Route path="/restaurant-detail/:id" element={<RestaurantDetail />} />
+        <Route path="/dish-detail/:id" element={<DishDetail />} />
       </Routes>
       </BrowserRouter>
     </Provider>
