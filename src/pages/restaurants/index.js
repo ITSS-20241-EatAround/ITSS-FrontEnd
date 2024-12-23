@@ -200,8 +200,8 @@ const Restaurants = () => {
                                 <a onClick={() => {
                                     navigate(`/restaurant-detail/${restaurant.restaurant_id}`)
                                 }}>
-                                    <img className="mx-auto h-full dark:hidden" src={restaurant.image_url} alt="" />
-                                    <img className="mx-auto hidden h-full dark:block" src={restaurant.image_url} alt="" />
+                                    <img className="mx-auto h-full dark:hidden" src={restaurant.image_url || "https://posapp.vn/wp-content/uploads/2020/09/%C4%91%E1%BB%93ng-b%E1%BB%99-n%E1%BB%99i-th%E1%BA%A5t.jpg"} alt="" />
+                                    <img className="mx-auto hidden h-full dark:block" src={restaurant.image_url || "https://posapp.vn/wp-content/uploads/2020/09/%C4%91%E1%BB%93ng-b%E1%BB%99-n%E1%BB%99i-th%E1%BA%A5t.jpg"} alt="" />
                                 </a>
                             </div>
                             <div className="pt-6">
