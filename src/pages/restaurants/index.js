@@ -198,7 +198,7 @@ const Restaurants = () => {
                         <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
                             <div className="h-56 w-full">
                                 <a onClick={() => {
-                                    navigate(`/restaurant/${restaurant.restaurant_id}`)
+                                    navigate(`/restaurant-detail/${restaurant.restaurant_id}`)
                                 }}>
                                     <img className="mx-auto h-full dark:hidden" src={restaurant.image_url} alt="" />
                                     <img className="mx-auto hidden h-full dark:block" src={restaurant.image_url} alt="" />
@@ -207,7 +207,7 @@ const Restaurants = () => {
                             <div className="pt-6">
                                 <div className="mb-4 flex items-center justify-between gap-4">
                                     <div className="flex items-center justify-end gap-1">
-                                        <button type="button"  onClick={() => {navigate(`/restaurant/${restaurant.restaurant_id}`)}} data-tooltip-target="tooltip-quick-look" className="rounded-lg p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                                        <button type="button"  onClick={() => {navigate(`/restaurant-detail/${restaurant.restaurant_id}`)}} data-tooltip-target="tooltip-quick-look" className="rounded-lg p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
                                             <span className="sr-only"> Quick look </span>
                                             <svg className="h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                                 <path stroke="currentColor" stroke-width="2" d="M21 12c0 1.2-4.03 6-9 6s-9-4.8-9-6c0-1.2 4.03-6 9-6s9 4.8 9 6Z" />
@@ -217,7 +217,7 @@ const Restaurants = () => {
                                 </div>
                             </div>
                                 <a onClick={() => {
-                                    navigate(`/restaurant/${restaurant.restaurant_id}`)
+                                    navigate(`/restaurant-detail/${restaurant.restaurant_id}`)
                                 }} className="text-lg font-semibold leading-tight text-gray-900 hover:underline dark:text-white">{restaurant.name}</a>
                                     <div className="mt-2 flex items-center gap-2">
                                     <div className="flex items-center">
