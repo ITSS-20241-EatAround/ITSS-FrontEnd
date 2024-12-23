@@ -2,13 +2,17 @@ import React, { useState, useEffect } from "react";
 import Header from "../../shared/components/header";
 import { restaurantDetail } from "../../services/restaurantDetail";
 import { useParams } from "react-router-dom";
-
-
+import { getTokenFromLocalStorage } from "../../services/localtoken";
+import { useNavigate } from "react-router-dom";
 const RestaurantDetail = () => {
   const { id } = useParams();
   const [dishes, setDishes] = useState([]);
-
+  const navigate = useNavigate();
   useEffect(() => {
+    const token = getTokenFromLocalStorage();
+      if (!token) {
+        navigate('/login');
+      }
     const fetchDish = async () => {
       try {
         const data = await restaurantDetail(id);
@@ -31,10 +35,10 @@ const RestaurantDetail = () => {
       <div className="bg-gray-100 min-h-screen p-4">
       <div className="max-w-4xl mx-auto bg-white shadow-md rounded-lg p-6">
         
-        <div className="flex items-center space-x-6">
+        <div className="flex items-center space-x-6 mb-5">
           <div className="flex-shrink-0 w-96 h-48 ">
             <img
-              src={restaurant.image_url}
+              src={restaurant.image_url || "https://posapp.vn/wp-content/uploads/2020/09/%C4%91%E1%BB%93ng-b%E1%BB%99-n%E1%BB%99i-th%E1%BA%A5t.jpg"}
               alt="Restaurant Logo"
               className="rounded-lg"
             />
@@ -44,7 +48,7 @@ const RestaurantDetail = () => {
             <h1 className="text-2xl font-bold text-gray-800">
               {restaurant.name}
             </h1>
-            <div className="flex items-center gap-2 mb-2">
+            <div className="flex items-center gap-2 mb-3 mt-3">
             <svg
             viewBox="0 0 1000 1000"
             fill="currentColor"
@@ -100,26 +104,30 @@ const RestaurantDetail = () => {
 
 
         {/* Menu Items */}
-        <div className="mt-6">
-          <h2 className="text-lg font-bold text-gray-800 mb-4">Món chính</h2>
+        <div className="mt-9">
+          <h2 className="text-lg font-bold text-gray-800 mb-4 mt-6">Món chính</h2>
           <ul className="space-y-4">
             {dishes.map((item, index) => (
               <li
                 key={index}
-                className="flex justify-between items-center bg-gray-50 p-4 rounded-lg shadow"
+                className="flex justify-between items-center bg-gray-50 p-4 rounded-lg shadow h-32"
               >
-                  <div className="flex-shrink-0 w-48 h-24 ">
+                <div className="flex-shrink-0 w-48 h-24 flex items-center justify-center">
                   <img
-                    src={item.image_url}
+                    src={
+                      item.image_url ||
+                      "https://beptueu.vn/hinhanh/tintuc/top-15-hinh-anh-mon-an-ngon-viet-nam-khien-ban-khong-the-roi-mat-1.jpg"
+                    }
                     alt="Dish Logo"
-                    className="rounded-lg"
+                    className="rounded-lg max-h-full"
                   />
                 </div>
                 <span className="text-gray-800 font-medium">{item.name}</span>
-                <span className="text-blue-600 font-semibold">{item.price}</span>
+                <span className="text-blue-600 font-semibold">{Number(item.price)} VNĐ</span>
               </li>
             ))}
           </ul>
+
         </div>
       </div>
     </div>
