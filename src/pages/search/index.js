@@ -22,11 +22,12 @@ const Search = () => {
           distance: searchParams.get("distance") || null,
           rating: searchParams.get("rating") || null,
           page: currentPage,
-          limit: 10,
+          limit: 4,
         };
         const response = await search(keyword, filters);
         setResult(response.data);
         setTotalPage(response.totalPages || 1);
+       
       } catch (error) {
         console.error("Error fetching search results:", error.message);
       }
@@ -39,6 +40,7 @@ const Search = () => {
   const handleChangePage = (newPage) => {
     if(newPage >= 1 && newPage <= totalPage){
       setCurrentPage(newPage);
+      //console.log(currentPage);
     }
   }
   return (
@@ -70,22 +72,28 @@ const Search = () => {
               </li>
             ))}
           </ul>
-          <div className="flex justify-center mt-6 space-x-2">
-              <button
-                className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
-                onClick={() => handleChangePage(currentPage - 1)}
-                disabled={currentPage === 1}
-              >
-                <svg viewBox="0 0 48 48" fill="currentColor" width="24px" height="24px"><path d="M30.83 14.83L28 12 16 24l12 12 2.83-2.83L21.66 24z"></path></svg>
-              </button>
-              <button
-                className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
-                onClick={() => handleChangePage(currentPage + 1)}
-                disabled={currentPage === totalPage}
-              >
-                <svg viewBox="0 0 48 48" fill="currentColor" width="24px" height="24px"><path d="M20 12l-2.83 2.83L26.34 24l-9.17 9.17L20 36l12-12z"></path></svg>
-              </button>
+          {totalPage > 1 && (
+            <div className="flex justify-center mt-6 space-x-2">
+              {currentPage > 1 && (
+                <button
+                  className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+                  onClick={() => handleChangePage(currentPage - 1)}
+                  >
+                  <svg viewBox="0 0 48 48" fill="currentColor" width="24px" height="24px"><path d="M30.83 14.83L28 12 16 24l12 12 2.83-2.83L21.66 24z"></path></svg>
+                </button>
+              )}
+              {currentPage < totalPage && (
+                <button
+                  className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+                  onClick={() => handleChangePage(currentPage + 1)}
+                  >
+                  <svg viewBox="0 0 48 48" fill="currentColor" width="24px" height="24px"><path d="M20 12l-2.83 2.83L26.34 24l-9.17 9.17L20 36l12-12z"></path></svg>
+               </button>
+              )}
+
             </div>
+          )}
+
           </>
         ) : (
           <p>No results found.</p>
