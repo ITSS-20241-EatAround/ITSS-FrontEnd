@@ -5,6 +5,8 @@ import Header from "../../shared/components/header";
 const Search = () => {
   const [results, setResult] = useState([]);
   const [searchParams] = useSearchParams();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(1);
   const keyword = searchParams.get("keyword");
   const latitude = searchParams.get("latitude");
   const longitude = searchParams.get("longitude");
@@ -19,18 +21,26 @@ const Search = () => {
           maxPrice: searchParams.get("maxPrice") || null,
           distance: searchParams.get("distance") || null,
           rating: searchParams.get("rating") || null,
+          page: currentPage,
+          limit: 5,
         };
         const response = await search(keyword, filters);
         setResult(response.data);
+        setTotalPage(response.totalPages || 1);
       } catch (error) {
         console.error("Error fetching search results:", error.message);
       }
     };
 
-    if (keyword) {
+  
       fetchSearch();
+   
+  }, [keyword, latitude, longitude, searchParams, currentPage]);
+  const handleChangePage = (newPage) => {
+    if(newPage >= 1 && newPage <= totalPage){
+      setCurrentPage(newPage);
     }
-  }, [keyword, latitude, longitude, searchParams]);
+  }
   return (
     <>
       <Header />
@@ -38,6 +48,7 @@ const Search = () => {
 
         <h1 className="text-2xl font-bold mb-4">Search Results for "{keyword}"</h1>
         {results.length > 0 ? (
+          <>
           <ul className="space-y-4">
             {results.map((item) => (
               <li key={item.id} className="flex justify-between items-center bg-gray-50 p-4 rounded-lg shadow" onClick={() => navigate(`/dish-detail/${item.dish_id}`)}>
@@ -59,6 +70,36 @@ const Search = () => {
               </li>
             ))}
           </ul>
+          <div className="flex justify-center mt-6 space-x-2">
+              <button
+                className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+                onClick={() => handleChangePage(currentPage - 1)}
+                disabled={currentPage === 1}
+              >
+                Previous
+              </button>
+              {Array.from({ length: totalPage }, (_, index) => (
+                <button
+                  key={index + 1}
+                  className={`px-4 py-2 rounded ${
+                    currentPage === index + 1
+                      ? "bg-blue-500 text-white"
+                      : "bg-gray-200 hover:bg-gray-300"
+                  }`}
+                  onClick={() => handleChangePage(index + 1)}
+                >
+                  {index + 1}
+                </button>
+              ))}
+              <button
+                className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+                onClick={() => handleChangePage(currentPage + 1)}
+                disabled={currentPage === totalPage}
+              >
+                Next
+              </button>
+            </div>
+          </>
         ) : (
           <p>No results found.</p>
         )}

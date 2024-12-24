@@ -74,7 +74,7 @@ const DishDetail = () => {
                         <div className="flex flex-col items-center justify-center mb-8">
                             <div className="bg-white shadow-md p-6 rounded-lg max-w-screen-md w-full relative">
                                 <img
-                                    src={dish.image_url}
+                                    src={dish.image_url || "https://beptueu.vn/hinhanh/tintuc/top-15-hinh-anh-mon-an-ngon-viet-nam-khien-ban-khong-the-roi-mat-1.jpg"}
                                     alt="dish image"
                                     className="w-full h-60 object-cover rounded-lg mb-4"
                                 />
@@ -99,7 +99,7 @@ const DishDetail = () => {
                             <div className="bg-white shadow-md p-6 rounded-lg max-w-screen-md w-full mt-6 cursor-pointer" onClick={() => navigate(`/restaurant-detail/${dish.restaurant_id}`)}>
                                 <div className="flex items-center gap-6">
                                     <img
-                                        src={dish.restaurant.image_url}
+                                        src={dish.restaurant.image_url || "https://posapp.vn/wp-content/uploads/2020/09/%C4%91%E1%BB%93ng-b%E1%BB%99-n%E1%BB%99i-th%E1%BA%A5t.jpg"}
                                         alt="Restarunt image"
                                         className="w-24 h-24 object-cover rounded-lg"
                                     />
