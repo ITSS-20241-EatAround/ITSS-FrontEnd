@@ -55,7 +55,7 @@ const List = ({ id }) => {
                         className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-transform transform hover:-translate-y-1 flex items-center gap-4 cursor-pointer"
                     >
                         <img
-                            src={item.image_url}
+                            src={item.image_url || "https://beptueu.vn/hinhanh/tintuc/top-15-hinh-anh-mon-an-ngon-viet-nam-khien-ban-khong-the-roi-mat-1.jpg"}
                             alt={item.name}
                             className="w-24 h-24 object-cover rounded-lg"
                         />
