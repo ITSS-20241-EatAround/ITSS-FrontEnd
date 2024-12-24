@@ -7,7 +7,7 @@ import Login from "./pages/login";
 import ForgotPassword from "./pages/forget";
 import DashBoard from "./pages/dashboard";
 import NotFound from "./pages/not_found";
-import RestaurantDetail from "./pages/RestaurantDetail";
+import RestaurantDetail from "./pages/restaurant_detail";
 import DishDetail from "./pages/dish_detail";
 import Restaurants from "./pages/restaurant";
 import Setting from "./pages/setting";
