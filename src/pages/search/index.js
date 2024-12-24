@@ -22,7 +22,7 @@ const Search = () => {
           distance: searchParams.get("distance") || null,
           rating: searchParams.get("rating") || null,
           page: currentPage,
-          limit: 5,
+          limit: 10,
         };
         const response = await search(keyword, filters);
         setResult(response.data);
@@ -76,27 +76,14 @@ const Search = () => {
                 onClick={() => handleChangePage(currentPage - 1)}
                 disabled={currentPage === 1}
               >
-                Previous
+                <svg viewBox="0 0 48 48" fill="currentColor" width="24px" height="24px"><path d="M30.83 14.83L28 12 16 24l12 12 2.83-2.83L21.66 24z"></path></svg>
               </button>
-              {Array.from({ length: totalPage }, (_, index) => (
-                <button
-                  key={index + 1}
-                  className={`px-4 py-2 rounded ${
-                    currentPage === index + 1
-                      ? "bg-blue-500 text-white"
-                      : "bg-gray-200 hover:bg-gray-300"
-                  }`}
-                  onClick={() => handleChangePage(index + 1)}
-                >
-                  {index + 1}
-                </button>
-              ))}
               <button
                 className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
                 onClick={() => handleChangePage(currentPage + 1)}
                 disabled={currentPage === totalPage}
               >
-                Next
+                <svg viewBox="0 0 48 48" fill="currentColor" width="24px" height="24px"><path d="M20 12l-2.83 2.83L26.34 24l-9.17 9.17L20 36l12-12z"></path></svg>
               </button>
             </div>
           </>
