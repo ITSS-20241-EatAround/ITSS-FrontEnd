@@ -22,7 +22,7 @@ const Search = () => {
           distance: searchParams.get("distance") || null,
           rating: searchParams.get("rating") || null,
           page: currentPage,
-          limit: 4,
+          limit: 10,
         };
         const response = await search(keyword, filters);
         setResult(response.data);
