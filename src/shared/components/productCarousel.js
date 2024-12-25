@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { DishSuggest } from '../../services/suggestApi';
 import { getTokenFromLocalStorage } from '../../services/localtoken';
-
+import { useNavigate } from 'react-router-dom';
 const ProductCarousel = () => {
+    const navigate = useNavigate();
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -18,6 +19,9 @@ const ProductCarousel = () => {
         if (currentIndex - itemsPerSlide >= 0) {
             setCurrentIndex(currentIndex - itemsPerSlide);
         }
+    };
+    const handleClick = (foodId) => {
+        navigate(`/dish-detail/${foodId}`);
     };
     useEffect(() => {
         const fetchProducts = async () => {
@@ -59,6 +63,7 @@ const ProductCarousel = () => {
                         <div
                             key={index}
                             className="bg-white p-4 rounded-lg shadow-md flex-1 transition-transform transform hover:scale-105 hover:shadow-xl"
+                            onClick={()=>handleClick(food.dish_id)}
                         >
                             <img
                                 src={food.image_url || "food.jpg"}

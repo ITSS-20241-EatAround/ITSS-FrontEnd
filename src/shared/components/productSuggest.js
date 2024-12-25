@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getTokenFromLocalStorage } from '../../services/localtoken';
 import { RestaurantSuggest } from '../../services/suggestApi';
+import { useNavigate } from 'react-router-dom';
 const getUserLocation = () => {
     return new Promise((resolve, reject) => {
         if (!navigator.geolocation) {
@@ -19,11 +20,16 @@ const getUserLocation = () => {
         );
     });
 }
+
 const ProductSuggest = () => {
     const [product, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const token = getTokenFromLocalStorage();
+    const navigate = useNavigate();
+    const handleClick = (restaurantId) => {
+        navigate(`/restaurant-detail/${restaurantId}`);
+    };
     useEffect(() => {
         const fetchProducts = async () => {
             try {
@@ -55,7 +61,7 @@ const ProductSuggest = () => {
         <div className="container mx-auto my-10">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
                 {/* Image Section */}
-                <div className="hidden lg:flex justify-center items-center">
+                <div className="hidden lg:flex justify-center items-center" onClick={() => handleClick(highestRatedRestaurant.restaurant_id)}>
                     <img 
                         src={highestRatedRestaurant.image_url || "https://posapp.vn/wp-content/uploads/2020/09/%C4%91%E1%BB%93ng-b%E1%BB%99-n%E1%BB%99i-th%E1%BA%A5t.jpg"} 
                         alt="restaurant" 
