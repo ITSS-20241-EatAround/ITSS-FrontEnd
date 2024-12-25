@@ -1,27 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { getTokenFromLocalStorage } from '../../services/localtoken';
 import Header from '../../shared/components/header';
 import { RestaurantSuggest, DishSuggest } from '../../services/suggestApi';
 import './index.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import ProductCarousel from '../../shared/components/ProductCarousel'
-const DashBoard = () => {
-    const restaurants = [
-        { name: 'Nhà Hàng A', address: 'Địa chỉ A', food: 'Cơm chiên, Bánh mì Xúc Xích', img: '/restaurantA.png' },
-        { name: 'Nhà Hàng B', address: 'Địa chỉ B', food: 'Mỳ xào, Bánh bao', img: '/restaurantB.png' },
-        { name: 'Nhà Hàng C', address: 'Địa chỉ C', food: 'Phở, Bánh mì', img: '/restaurantC.png' },
-    ];
-    const [currentIndex, setCurrentIndex] = useState(0);
-    const handleNext = () => {
-        setCurrentIndex((prevIndex) => (prevIndex + 1) % restaurants.length);
-    };
+import ProductSuggest from '../../shared/components/ProductSuggest';
+import ProductCarousel from '../../shared/components/ProductCarousel';
 
-    const handlePrev = () => {
-        setCurrentIndex((prevIndex) => (prevIndex - 1 + restaurants.length) % restaurants.length);
-    };
+const DashBoard = () => {
+    const [loading, setLoading] = useState(true);
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [error, setError] = useState(null);
+
     const itemsPerSlide = 3;
-    const navigate = useNavigate();
 
     const nextSlide = () => {
         setCurrentIndex((prevIndex) => (prevIndex + itemsPerSlide) % restaurantList.length);
@@ -32,7 +23,6 @@ const DashBoard = () => {
         // if (!token) {
         //     navigate('/login');
         // }
-
         RestaurantSuggest({}).then(({ data }) => {
             setRestaurantList(data.data)
         }
@@ -72,19 +62,7 @@ const DashBoard = () => {
                     </div>
                 </div>
             </section>
-            <div className='container my-5'>
-                <div className='row'>
-                    <div className='col-lg-6 d-flex justify-content-center d-none d-lg-flex'>
-                        <img src="/nha-an-bk.png" className='img-fluid w-50' alt="about img" />
-                    </div>
-                    <div className='col-lg-6 d-flex flex-column align-items-center justify-content-center'>
-                        <h2 className='fs-1 mb-5 text-uppercase fw-bold'>Nhà hàng hàng đầu</h2>
-
-                        <p className='mb-5'>Nhà ăn Bách Khoa là 1 nhà ăn 5sao phục vụ cho sinh viên Bách Khoa</p>
-
-                    </div>
-                </div>
-            </div>
+            <ProductSuggest />
             <div className='menu-section py-5 text-light shadow'>
                 <div className='container d-flex flex-column align-items-center'>
                     <h2 className='fs-1 mb-5 text-uppercase fw-bold'>Món ăn hàng đầu</h2>
@@ -127,29 +105,10 @@ const DashBoard = () => {
 
                 </div>
             </div>
-            <div className='restaurant-list-section py-5'>
-                <div className='container text-center'>
-                    <h2 className='fs-1 mb-5 text-uppercase fw-bold'>Danh sách nhà hàng</h2>
-                    <div className='restaurant-info-card'>
-                        <div className='row'>
-                            <div className='col-md-6'>
-                                <img src={restaurants[currentIndex].img} className='img-fluid' alt={restaurants[currentIndex].name} />
-                            </div>
-                            <div className='col-md-6 d-flex flex-column justify-content-center'>
-                                <h3 className='fs-2'>{restaurants[currentIndex].name}</h3>
-                                <p className='fs-4'>{restaurants[currentIndex].address}</p>
-                                <p className='fs-5'>{restaurants[currentIndex].food}</p>
-                            </div>
-                        </div>
-                    </div>
-                    {/* Nút chuyển nhà hàng */}
-                    <div >
-                        <button onClick={handlePrev} className="btn btn-primary position-absolute start-0 top-50 translate-middle-y">❮</button>
-                        <button onClick={handleNext} className="btn btn-primary position-absolute end-0 top-50 translate-middle-y">❯</button>
-                    </div>
-                </div>
+            <div className="container mx-auto px-4 py-6">
+                <h1 className="text-2xl font-bold text-center mb-8">DANH SÁCH MÓN ĂN ĐỀ XUẤT</h1>
+                <ProductCarousel />
             </div>
-
 
         </div>
     );
