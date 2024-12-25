@@ -46,7 +46,7 @@ const ProductSuggest = () => {
             }
         };
         fetchProducts();
-        const intervalId = setInterval(fetchProducts, 5000);
+        const intervalId = setInterval(fetchProducts, 86400000); // 1 ngày
         return () => {
             clearInterval(intervalId);
         };
