@@ -45,8 +45,12 @@ const ProductSuggest = () => {
                 setLoading(false);
             }
         };
-
         fetchProducts();
+        const intervalId = setInterval(fetchProducts, 5000);
+        return () => {
+            clearInterval(intervalId);
+        };
+        
     }, [token]);
     if (loading) {
         return <div className="text-center py-6">Loading...</div>;
@@ -54,16 +58,13 @@ const ProductSuggest = () => {
     if (error) {
         return <div className="text-center py-6 text-red-600">Error: {error}</div>;
     }
-    const highestRatedRestaurant = product.reduce((max, products) => {
-        return products.rating > max.rating ? products : max;
-    }, product[0]);
     return (
         <div className="container mx-auto my-10">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
                 {/* Image Section */}
-                <div className="hidden lg:flex justify-center items-center" onClick={() => handleClick(highestRatedRestaurant.restaurant_id)}>
+                <div className="hidden lg:flex justify-center items-center" onClick={() => handleClick(product[0].restaurant_id)}>
                     <img 
-                        src={highestRatedRestaurant.image_url || "https://posapp.vn/wp-content/uploads/2020/09/%C4%91%E1%BB%93ng-b%E1%BB%99-n%E1%BB%99i-th%E1%BA%A5t.jpg"} 
+                        src={product[0].image_url || "https://posapp.vn/wp-content/uploads/2020/09/%C4%91%E1%BB%93ng-b%E1%BB%99-n%E1%BB%99i-th%E1%BA%A5t.jpg"} 
                         alt="restaurant" 
                         className="w-full lg:w-1/2 object-cover object-center  rounded-lg"
                     />
@@ -74,13 +75,13 @@ const ProductSuggest = () => {
                     <h2 className="text-4xl font-bold uppercase mb-5 text-primary">Nhà hàng hàng đầu</h2>
                     <div className="space-y-2">
                         <p className="text-lg font-semibold">
-                            Tên nhà hàng: <span className="font-normal">{highestRatedRestaurant.name}</span>
+                            Tên nhà hàng: <span className="font-normal">{product[0].name}</span>
                         </p>
                         <p className="text-lg font-semibold">
-                            Địa chỉ: <span className="font-normal">{highestRatedRestaurant.address}</span>
+                            Địa chỉ: <span className="font-normal">{product[0].address}</span>
                         </p>
                         <p className="text-lg font-semibold">
-                            Rating: <span className="font-normal">{highestRatedRestaurant.rating}</span>
+                            Rating: <span className="font-normal">{product[0].rating}</span>
                         </p>
                     </div>
                 </div>
