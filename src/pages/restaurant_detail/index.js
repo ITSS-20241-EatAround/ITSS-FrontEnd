@@ -1,8 +1,9 @@
-import React, { useState , useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import Header from "../../shared/components/header";
 import List from "../../shared/components/list"
-import {restaurantDetail} from "../../services/restaurantDetail";
-import { useParams } from "react-router-dom";
+import { restaurantDetail } from "../../services/restaurantDetail";
+import { useNavigate, useParams } from "react-router-dom";
+import { getTokenFromLocalStorage } from "../../services/localtoken";
 const StarRating = ({ rating }) => {
   const fullStars = Math.floor(rating); // Số sao đầy đủ
   const halfStar = rating - fullStars >= 0.5; // Có nửa sao không?
@@ -34,9 +35,14 @@ const StarRating = ({ rating }) => {
   );
 };
 const RestaurantDetail = () => {
-  const { id } = useParams(); 
+  const navigate = useNavigate();
+  const { id } = useParams();
   const [dishes, setDishes] = useState([]);
   useEffect(() => {
+    const token = getTokenFromLocalStorage();
+    if (!token) {
+      navigate('/login');
+    }
     const fetchDish = async () => {
       try {
         const data = await restaurantDetail(id);
@@ -76,13 +82,16 @@ const RestaurantDetail = () => {
                     {rating.toFixed(1)}
                   </span>
                 </div>
+                <p className="text-gray-700 mt-1">
+                  Liên hệ: {restaurant.contact || 'Không có thông tin'}
+                </p>
               </div>
             </div>
           </div>
         </div>
 
         {/* Danh sách món ăn */}
-        <List id={id}/>
+        <List id={id} />
       </div>
     </>
   );

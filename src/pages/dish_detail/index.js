@@ -5,6 +5,7 @@ import Comment from "../../shared/components/comment";
 import { useNavigate, useParams } from "react-router-dom";
 import { getDishById } from "../../services/restaurantDetail";
 import { DeleteFavoriteAPI, GetFavoriteAPI, PostFavoriteAPI } from "../../services/userApi";
+import { getTokenFromLocalStorage } from "../../services/localtoken";
 
 const StarRating = ({ rating }) => {
     const fullStars = Math.floor(rating);
@@ -52,6 +53,10 @@ const DishDetail = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
+        const token = getTokenFromLocalStorage();
+        if (!token) {
+            navigate('/login');
+        }
         getDishById(id, {}).then(({ data }) => {
             setDish(data.data);
         }).catch((err) => {
@@ -115,13 +120,13 @@ const DishDetail = () => {
                                             </span>
                                         </div>
                                         <p className="text-gray-700 mt-1">
-                                            Liên hệ: {dish.restaurant.contat || 'Không có thông tin'}
+                                            Liên hệ: {dish.restaurant.contact || 'Không có thông tin'}
                                         </p>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <Comment id={id}/>
+                        <Comment id={id} />
 
                         <List id={dish.restaurant_id} />
                     </>

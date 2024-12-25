@@ -15,9 +15,9 @@ const DashBoard = () => {
 
     useEffect(() => {
         const token = getTokenFromLocalStorage();
-        // if (!token) {
-        //     navigate('/login');
-        // }
+        if (!token) {
+            navigate('/login');
+        }
 
         RestaurantSuggest({}).then(({ data }) => {
             setRestaurantList(data.data)
