@@ -4,6 +4,7 @@ import List from "../../shared/components/list"
 import { restaurantDetail } from "../../services/restaurantDetail";
 import { useNavigate, useParams } from "react-router-dom";
 import { getTokenFromLocalStorage } from "../../services/localtoken";
+import NoDishesPage from "../no_dish";
 const StarRating = ({ rating }) => {
   const fullStars = Math.floor(rating); // Số sao đầy đủ
   const halfStar = rating - fullStars >= 0.5; // Có nửa sao không?
@@ -54,7 +55,7 @@ const RestaurantDetail = () => {
     }
     fetchDish();
   }, [id])
-  if (!dishes.length) return <div>No dishes found.</div>;
+  if (!dishes.length) return <NoDishesPage/>;
 
   // Lấy thông tin nhà hàng từ món ăn đầu tiên
   const restaurant = dishes[0].restaurant;
