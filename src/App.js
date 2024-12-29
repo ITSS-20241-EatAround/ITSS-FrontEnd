@@ -12,6 +12,7 @@ import DishDetail from "./pages/dish_detail";
 import Restaurants from "./pages/restaurant";
 import Setting from "./pages/setting";
 import Search from "./pages/search";
+import FavoritePage from "./pages/favorite";
 const App = () => {
   return (
     <Provider store={store}>
@@ -28,7 +29,7 @@ const App = () => {
         <Route path="/restaurant-detail/" element={<RestaurantDetail />} />
         <Route path="/dish-detail/" element={<DishDetail />} />
         <Route path="/search" element={<Search />}/>
-
+        <Route path="/favorite" element={<FavoritePage />}/>
 
       </Routes>
       </BrowserRouter>

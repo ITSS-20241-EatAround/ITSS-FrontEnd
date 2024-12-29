@@ -40,7 +40,46 @@ const Restaurants = () => {
             },
             description: "Best Mexican street food in town. Fresh ingredients, daily made tortillas."
         },
-        // Add more mock restaurants as needed
+        // Thêm 3 nhà hàng mới
+        {
+            restaurant_id: 3,
+            name: "Sushi Master",
+            image_url: "/restaurant1.jpg",
+            rating: 4.8,
+            address: "789 Sushi Lane, San Francisco, CA",
+            distance: 0.5,
+            dishPrices: {
+                lowest: 25000,
+                highest: 150000
+            },
+            description: "Premium Japanese sushi restaurant with fresh seafood imported daily. Expert sushi chefs with 20+ years experience."
+        },
+        {
+            restaurant_id: 4,
+            name: "Pho Delights",
+            image_url: "/restaurant1.jpg",
+            rating: 4.6,
+            address: "321 Asian Avenue, San Francisco, CA",
+            distance: 1.5,
+            dishPrices: {
+                lowest: 18000,
+                highest: 45000
+            },
+            description: "Authentic Vietnamese cuisine featuring traditional pho and spring rolls. Family recipes passed down through generations."
+        },
+        {
+            restaurant_id: 5,
+            name: "BBQ Kingdom",
+            image_url: "/restaurant1.jpg",
+            rating: 4.7,
+            address: "456 Grill Street, San Francisco, CA",
+            distance: 2.0,
+            dishPrices: {
+                lowest: 30000,
+                highest: 200000
+            },
+            description: "Premium BBQ restaurant specializing in smoked meats and homemade sauces. Perfect for meat lovers and family gatherings."
+        }
     ];
 
     const toggleFilter = () => {
@@ -84,7 +123,7 @@ const Restaurants = () => {
                     {/* Navigation Tabs */}
                     <div className="mb-8">
                         <div className="flex space-x-6 border-b border-gray-200">
-                            {['Open Now', 'Outdoor Seating', 'Takeout', 'Delivery', 'Dine In', 'Offers'].map((tab) => (
+                            {['Phù hợp nhất', 'Gần bạn', 'Đánh giá cao', 'Giá cả rẻ', 'Sale-up', 'Mới mở cửa'].map((tab) => (
                                 <button
                                     key={tab}
                                     className="px-4 py-2 text-gray-600 hover:text-gray-900 border-b-2 border-transparent hover:border-orange-500 transition-colors duration-300"
