@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import PersonIcon from '@mui/icons-material/Person';
 import { LoginAPI } from "../../services/authApi";
 import { saveTokenToLocalStorage } from "../../services/localtoken";
 
@@ -38,66 +36,126 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-cover bg-center" style={{
-      backgroundImage: "url('/bgr.jpg')",
-    }}>
-      <div className="bg-white p-8 rounded-lg shadow-md w-96">
-        <h2 className="text-2xl font-bold mb-6 text-gray-800 text-center">Login</h2>
-
-        <form className="space-y-4" onSubmit={handleSubmit}>
-          {/* Username */}
-          <div className="flex items-center space-x-2">
-            <PersonIcon className="text-gray-500" />
-            <input
-              type="text"
-              placeholder="Username"
-              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
+    <div 
+      className="min-h-screen bg-cover bg-center bg-fixed flex items-center justify-center"
+      style={{
+        backgroundImage: `linear-gradient(to bottom, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7)), url('/backgr2.jpg')`
+      }}
+    >
+      <div className="max-w-md w-full mx-4">
+        {/* Logo Section */}
+        <div className="text-center mb-8">
+          <div className="flex items-center justify-center mb-4">
+            <svg 
+              className="w-12 h-12 text-orange-500" 
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+            >
+              <path 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+                strokeWidth="2" 
+                d="M13.966 17.036c-3.867 0-7-3.133-7-7 0-3.868 3.133-7 7-7s7 3.132 7 7c0 3.867-3.133 7-7 7zM4.813 20.186l3.878-3.878" 
+              />
+            </svg>
           </div>
-
-          {/* Password */}
-          <div className="flex items-center space-x-2">
-            <LockOutlinedIcon className="text-gray-500" />
-            <input
-              type="password"
-              placeholder="Password"
-              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-
-          {/* Hiển thị lỗi nếu có */}
-          {error && <div className="text-red-500 text-sm mb-4 text-center">{error}</div>}
-
-          {/* Submit Button */}
-          <button
-            type="submit"
-            className="w-full py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 flex items-center justify-center"
-          >
-            <PersonIcon className="mr-2" />
-            Login
-          </button>
-        </form>
-
-        <div className="mt-2 text-center">
-          <Link to="/forgot-password" className="text-red-500 hover:underline">
-            Forgot your password?
-          </Link>
+          <h2 className="text-3xl font-bold bg-gradient-to-r from-orange-400 to-orange-700 bg-clip-text text-transparent">
+            Welcome Back
+          </h2>
+          <p className="text-gray-600 mt-2">Sign in to continue to FoodieFind</p>
         </div>
 
-        {/* Link quay lại trang đăng ký */}
-        <div className="mt-4 text-center">
-          <Link to="/register" className="text-blue-500 hover:underline">
-            Don't have an account? Register here.
-          </Link>
-        </div>
+        {/* Login Card */}
+        <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl p-8">
+          <form className="space-y-6" onSubmit={handleSubmit}>
+            {/* Username Field */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Username
+              </label>
+              <div className="relative">
+                <input
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 transition-all duration-300 pl-12"
+                  placeholder="Enter your username"
+                />
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <svg className="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
+                </div>
+              </div>
+            </div>
 
+            {/* Password Field */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Password
+              </label>
+              <div className="relative">
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 transition-all duration-300 pl-12"
+                  placeholder="Enter your password"
+                />
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <svg className="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            {/* Error Message */}
+            {error && (
+              <div className="bg-red-50 text-red-500 text-sm rounded-lg p-3">
+                {error}
+              </div>
+            )}
+
+            {/* Submit Button */}
+            <button
+              type="submit"
+              className="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white py-3 rounded-xl font-medium hover:from-orange-600 hover:to-orange-700 transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-lg"
+            >
+              Sign In
+            </button>
+          </form>
+
+          {/* Links */}
+          <div className="mt-6 space-y-4">
+            <Link 
+              to="/forgot-password" 
+              className="block text-center text-orange-600 hover:text-orange-700 text-sm font-medium transition-colors duration-300"
+            >
+              Forgot your password?
+            </Link>
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-200"></div>
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-4 bg-white/80 text-gray-500">
+                  Don't have an account?
+                </span>
+              </div>
+            </div>
+            <Link 
+              to="/register" 
+              className="block text-center text-orange-600 hover:text-orange-700 font-medium transition-colors duration-300"
+            >
+              Create an account
+            </Link>
+          </div>
+        </div>
       </div>
     </div>
   );
-}
+};
 
 export default Login;

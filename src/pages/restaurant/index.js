@@ -1,28 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Header from "../../shared/components/header";
 import Draggable from "react-draggable";
-import { getRestaurants } from "../../services/restaurant";
-import { getTokenFromLocalStorage } from "../../services/localtoken";
-import { useNavigate, Link } from 'react-router-dom';
-function getUserLocation() {
-    return new Promise((resolve, reject) => {
-        if(!navigator.geolocation){
-            return reject(new Error('Cannot get location'));
-        }
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                resolve({
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude,
-                });
-            },
-            (error) => {
-                reject(error.message);
-            }
-        )
-    })
-}
+import { useNavigate } from 'react-router-dom';
+
 const Restaurants = () => {
+    const navigate = useNavigate();
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const [filters, setFilters] = useState({
         price: "",
@@ -30,292 +12,154 @@ const Restaurants = () => {
         rating: "",
     });
 
-    const navigate = useNavigate();
-    const [restaurantList, setRestaurantList] = useState([]);
-    const [error, setError] = useState(null);
+    // Mock data for restaurants
+    const restaurantList = [
+        {
+            restaurant_id: 1,
+            name: "Pasta Pesto",
+            image_url: "/restaurant1.jpg",
+            rating: 4.5,
+            address: "1234 Main St, San Francisco, CA",
+            distance: 0.8,
+            dishPrices: {
+                lowest: 20000,
+                highest: 50000
+            },
+            description: "Authentic Italian cuisine with a modern twist. Known for handmade pasta and fresh ingredients."
+        },
+        {
+            restaurant_id: 2,
+            name: "Taco Time",
+            image_url: "/restaurant2.jpg",
+            rating: 4.2,
+            address: "5678 Market St, San Francisco, CA",
+            distance: 1.2,
+            dishPrices: {
+                lowest: 15000,
+                highest: 40000
+            },
+            description: "Best Mexican street food in town. Fresh ingredients, daily made tortillas."
+        },
+        // Add more mock restaurants as needed
+    ];
+
     const toggleFilter = () => {
         setIsFilterOpen(!isFilterOpen);
     };
-    
- 
+
     const handleFilterChange = (e) => {
         const { name, value } = e.target;
         setFilters((prevFilters) => ({
             ...prevFilters,
-            [name]: prevFilters[name] === value ? "" : value, 
+            [name]: prevFilters[name] === value ? "" : value,
         }));
     };
 
-    const fetchRestaurant = async () => {
-        try {
-            const location = await getUserLocation();
-            const latitude = location.latitude;
-            const longitude = location.longitude;
-            console.log(latitude, longitude)
-            const response = await getRestaurants(latitude,longitude);
-            let filteredRestaurants = response.data;
-            
-            if (filters.price) {
-                if (filters.price === "Thấp") {
-                    filteredRestaurants = filteredRestaurants.filter(restaurant => restaurant.dishPrices.highest <= 20000);
-                } else if (filters.price === "Trung bình") {
-                    filteredRestaurants = filteredRestaurants.filter(restaurant => restaurant.dishPrices.lowest> 20000 &&  restaurant.dishPrices.highest<= 50000);
-                } else if (filters.price === "Cao") {
-                    filteredRestaurants = filteredRestaurants.filter(restaurant => restaurant.dishPrices.lowest > 30000 && restaurant.dishPrices.highest<= 60000);
-                } else if (filters.price === "Rất cao") {
-                    filteredRestaurants = filteredRestaurants.filter(restaurant => restaurant.dishPrices.highest > 60000);
-                }
-            
-            }
-            if (filters.distance) {
-                filteredRestaurants = filteredRestaurants.filter(restaurant => {
-                    if (filters.distance === "< 1km") return restaurant.distance < 1;
-                    if (filters.distance === "1 - 5km") return restaurant.distance >= 1 && restaurant.distance <= 5;
-                    if (filters.distance === "5 - 10km") return restaurant.distance > 5 && restaurant.distance <= 10;
-                    if (filters.distance === "> 10km") return restaurant.distance > 10;
-                        return true;
-                });
-            }
-            if (filters.rating) {
-                const ratingValue = parseInt(filters.rating.charAt(0));
-                filteredRestaurants = filteredRestaurants.filter(restaurant => restaurant.rating >= ratingValue);
-            }
-            setRestaurantList(filteredRestaurants);
-            setError(null);
-        } catch (error) {
-            setError("Error fetching restaurants.");
-        }
-    };
-    useEffect(() => {
-        const token = getTokenFromLocalStorage();
-        if (!token) {
-            navigate('/login');
-        }
-        
-            fetchRestaurant();
- 
-
-    }, [filters])
     return (
-        <div>
+        <div 
+            className="min-h-screen bg-cover bg-center bg-fixed"
+            style={{
+                backgroundImage: `linear-gradient(to bottom, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7)), url('/backgr2.jpg')`
+            }}
+        >
             <Header/>
-            <section className="bg-gray-200 py-8 antialiased md:py-12 ">
-            <div className="mx-auto max-w-screen-xl px-4 2xl:px-0">
-                <div className="relative mb-4 items-end justify-between space-y-4 sm:flex sm:space-y-0 md:mb-8">
+            <section className="py-8 antialiased md:py-12">
+                <div className="mx-auto max-w-5xl px-4 2xl:px-0">
+                    <div className="mb-8 flex justify-between items-center">
+                        <h2 className="text-3xl font-bold text-gray-800 relative">
+                            Restaurants
+                            
+                        </h2>
+                    </div>
 
-                    <button type="button" onClick={toggleFilter} className="flex items-center justify-center rounded-lg border border-gray-200 bg-sky-500 px-3 py-2 text-sm font-medium text-gray-900 hover:bg-sky-600 sm:w-auto">
-                    <svg
-                        className="-ms-0.5 me-2 h-4 w-4"
-                        aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                    >
-                    <path
-                        stroke="currentColor"
-                        strokeLinecap="round"
-                        strokeWidth="2"
-                        d="M18.796 4H5.204a1 1 0 0 0-.753 1.659l5.302 6.058a1 1 0 0 1 .247.659v4.874a.5.5 0 0 0 .2.4l3 2.25a.5.5 0 0 0 .8-.4v-7.124a1 1 0 0 1 .247-.659l5.302-6.059c.566-.646.106-1.658-.753-1.658Z"
-                    />
-                    </svg>
-                    Filters
-                    </button>
+                    {/* Filter Panel */}
+                    {isFilterOpen && (
+                        <Draggable>
+                            <div className="fixed top-24 right-4 z-50 w-64 rounded-xl border bg-white/90 backdrop-blur-sm shadow-xl p-4">
+                                {/* ... existing filter content ... */}
+                            </div>
+                        </Draggable>
+                    )}
 
-            
-            {isFilterOpen && (
-                <Draggable>
-                    <div className="absolute top-12 left-0 z-50 w-64 rounded-lg border border-gray-300 bg-white shadow-lg p-4">
-                        <h3 className="text-lg font-semibold mb-2 text-gray-700 ">
-                            Bộ lọc
-                        </h3>
-
-                        
-                        <div className="mb-3">
-                            <h4 className="text-sm font-medium text-gray-600">
-                                Khoảng giá
-                            </h4>
-                            {["Thấp", "Trung bình", "Cao", "Rất cao"].map((price) => (
-                                <label key={price} className="block text-sm">
-                                    <input
-                                        type="checkbox"
-                                        name="price"
-                                        value={price}
-                                        checked={filters.price === price}
-                                        onChange={handleFilterChange}
-                                        className="mr-2"
-                                    />
-                                    {price}
-                                </label>
-                            ))}
-                        </div>
-
-                     
-                        <div className="mb-3">
-                            <h4 className="text-sm font-medium text-gray-600">
-                                Khoảng cách
-                            </h4>
-                            {["< 1km", "1 - 5km", "5 - 10km", "> 10km"].map((distance) => (
-                                <label key={distance} className="block text-sm">
-                                    <input
-                                        type="checkbox"
-                                        name="distance"
-                                        value={distance}
-                                        checked={filters.distance === distance}
-                                        onChange={handleFilterChange}
-                                        className="mr-2"
-                                    />
-                                    {distance}
-                                </label>
-                            ))}
-                        </div>
-
-                       
-                        <div className="mb-3">
-                            <h4 className="text-sm font-medium text-gray-600">
-                                Đánh giá
-                            </h4>
-                            {["1 sao", "2 sao", "3 sao", "4 sao", "5 sao"].map((rating) => (
-                                <label key={rating} className="block text-sm">
-                                    <input
-                                        type="checkbox"
-                                        name="rating"
-                                        value={rating}
-                                        checked={filters.rating === rating}
-                                        onChange={handleFilterChange}
-                                        className="mr-2"
-                                    />
-                                    {rating}
-                                </label>
+                    {/* Navigation Tabs */}
+                    <div className="mb-8">
+                        <div className="flex space-x-6 border-b border-gray-200">
+                            {['Open Now', 'Outdoor Seating', 'Takeout', 'Delivery', 'Dine In', 'Offers'].map((tab) => (
+                                <button
+                                    key={tab}
+                                    className="px-4 py-2 text-gray-600 hover:text-gray-900 border-b-2 border-transparent hover:border-orange-500 transition-colors duration-300"
+                                >
+                                    {tab}
+                                </button>
                             ))}
                         </div>
                     </div>
-                </Draggable>
-            )}
-                </div>
-            {/* List nhà hàng*/}
-                <div className="mb-4 grid gap-4 sm:grid-cols-2 md:mb-8 lg:grid-cols-3 xl:grid-cols-4">
-                    {restaurantList.map((restaurant, index) => (
-                        <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm hover:bg-white">
-                            <div className="h-56 w-full">
-                                <a onClick={() => {
-                                    navigate(`/restaurant-detail/${restaurant.restaurant_id}`)
-                                }}>
-                                    <img className="mx-auto h-full dark:hidden" src={restaurant.image_url || "https://posapp.vn/wp-content/uploads/2020/09/%C4%91%E1%BB%93ng-b%E1%BB%99-n%E1%BB%99i-th%E1%BA%A5t.jpg"} alt="" />
-                                    <img className="mx-auto hidden h-full dark:block" src={restaurant.image_url || "https://posapp.vn/wp-content/uploads/2020/09/%C4%91%E1%BB%93ng-b%E1%BB%99-n%E1%BB%99i-th%E1%BA%A5t.jpg"} alt="" />
-                                </a>
-                            </div>
-                            <div className="pt-6">
-                                <div className="mb-4 flex items-center justify-between gap-4">
-                                    <div className="flex items-center justify-end gap-1">
-                                        <button type="button"  onClick={() => {navigate(`/restaurant-detail/${restaurant.restaurant_id}`)}} data-tooltip-target="tooltip-quick-look" className="rounded-lg p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-                                            <span className="sr-only"> Quick look </span>
-                                            <svg className="h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                                <path stroke="currentColor" stroke-width="2" d="M21 12c0 1.2-4.03 6-9 6s-9-4.8-9-6c0-1.2 4.03-6 9-6s9 4.8 9 6Z" />
-                                                <path stroke="currentColor" stroke-width="2" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                                            </svg>
-                                        </button>
+
+                    {/* Restaurant List */}
+                    <div className="space-y-6">
+                        {restaurantList.map((restaurant) => (
+                            <div 
+                                key={restaurant.restaurant_id}
+                                className="bg-white/90 backdrop-blur-sm rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer"
+                                onClick={() => navigate(`/restaurant-detail/${restaurant.restaurant_id}`)}
+                            >
+                                <div className="flex">
+                                    <div className="w-1/3">
+                                        <img 
+                                            src={restaurant.image_url} 
+                                            alt={restaurant.name}
+                                            className="h-full w-full object-cover"
+                                        />
+                                    </div>
+                                    <div className="w-2/3 p-6 flex flex-col justify-between">
+                                        <div>
+                                            <div className="flex justify-between items-start mb-2">
+                                                <h3 className="text-xl font-bold text-gray-800 hover:text-orange-500 transition-colors duration-300">
+                                                    {restaurant.name}
+                                                </h3>
+                                                <div className="flex items-center gap-1 bg-gray-700 text-white px-3 py-1 rounded-full">
+                                                    <svg className="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                                    </svg>
+                                                    <span className="font-semibold">{restaurant.rating}</span>
+                                                </div>
+
+                                            </div>
+                                            <p className="text-gray-600 mb-4">{restaurant.description}</p>
+                                            <div className="flex items-center gap-4 text-sm text-gray-500">
+                                                <div className="flex items-center gap-1">
+                                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                    </svg>
+                                                    <span>{restaurant.address}</span>
+                                                </div>
+                                                <div className="flex items-center gap-1">
+                                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                    </svg>
+                                                    <span>{Number(restaurant.distance).toFixed(1)} km</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="flex justify-between items-center mt-4">
+                                            <div className="text-orange-500 font-semibold">
+                                                {restaurant.dishPrices.lowest.toLocaleString()}đ - {restaurant.dishPrices.highest.toLocaleString()}đ
+                                            </div>
+                                            <button className="bg-gray-700 text-white px-4 py-2 rounded-full hover:bg-black transition-colors duration-300">
+                                                View Menu
+                                            </button>
+
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                                <a onClick={() => {
-                                    navigate(`/restaurant-detail/${restaurant.restaurant_id}`)
-                                }} className="text-lg font-semibold leading-tight text-gray-900 hover:underline">{restaurant.name}</a>
-                                    <div className="mt-2 flex items-center gap-2">
-                                    <div className="flex items-center">
-                                    {[...Array(5)].map((_, starIndex) => {
-                                        const rating = restaurant.rating || 0;
-                                        const isFull = starIndex < Math.floor(rating);
-                                        const isHalf = starIndex < rating && starIndex >= Math.floor(rating);
-
-                                        return (
-                                            <div key={starIndex} className="relative inline-block h-4 w-4">
-                                            
-                                            <svg
-                                                className="absolute top-0 left-0 h-4 w-4 text-gray-300"
-                                                aria-hidden="true"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                fill="currentColor"
-                                                viewBox="0 0 24 24"
-                                            >
-                                                <path d="M13.8 4.2a2 2 0 0 0-3.6 0L8.4 8.4l-4.6.3a2 2 0 0 0-1.1 3.5l3.5 3-1 4.4c-.5 1.7 1.4 3 2.9 2.1l3.9-2.3 3.9 2.3c1.5 1 3.4-.4 3-2.1l-1-4.4 3.4-3a2 2 0 0 0-1.1-3.5l-4.6-.3-1.8-4.2Z" />
-                                            </svg>
-
-                                          
-                                            <svg
-                                                className={`absolute top-0 left-0 h-4 w-4 ${
-                                                isFull || isHalf ? "text-yellow-400" : "text-transparent"
-                                                }`}
-                                                aria-hidden="true"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                fill="currentColor"
-                                                viewBox="0 0 24 24"
-                                                style={isHalf ? { clipPath: "inset(0 50% 0 0)" } : {}}
-                                            >
-                                                <path d="M13.8 4.2a2 2 0 0 0-3.6 0L8.4 8.4l-4.6.3a2 2 0 0 0-1.1 3.5l3.5 3-1 4.4c-.5 1.7 1.4 3 2.9 2.1l3.9-2.3 3.9 2.3c1.5 1 3.4-.4 3-2.1l-1-4.4 3.4-3a2 2 0 0 0-1.1-3.5l-4.6-.3-1.8-4.2Z" />
-                                            </svg>
-                                            </div>
-                                        );
-                                    })}
-
-
-                                    </div>
-                    
-                                        <p className="text-sm font-medium text-gray-900">{restaurant.rating}</p>
-                                       
-                                    </div>
-                                    <div className="mt-2">
-                                        <div className="flex items-center gap-2 mb-2">
-                                        <svg
-                                        viewBox="0 0 24 24"
-                                        fill="currentColor"
-                                        height="1.3em"
-                                        width="1.3em"
-                                       
-                                        >
-                                        <path d="M12 2C7.589 2 4 5.589 4 9.995 3.971 16.44 11.696 21.784 12 22c0 0 8.029-5.56 8-12 0-4.411-3.589-8-8-8zm0 12c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z" />
-                                        </svg>
-                                        <p className="text-sm font-medium text-gray-500">{restaurant.address}</p>
-                                        </div>
-                                        <div className="flex items-center gap-2">
-                                        <svg
-                                        viewBox="0 0 24 24"
-                                        fill="currentColor"
-                                        height="1.3em"
-                                        width="1.3em"
-                                        
-                                        >
-                                        <path d="M6.5 8.11c-.89 0-1.61-.72-1.61-1.61A1.61 1.61 0 016.5 4.89c.89 0 1.61.72 1.61 1.61A1.61 1.61 0 016.5 8.11M6.5 2C4 2 2 4 2 6.5c0 3.37 4.5 8.36 4.5 8.36S11 9.87 11 6.5C11 4 9 2 6.5 2m11 6.11a1.61 1.61 0 01-1.61-1.61 1.609 1.609 0 113.22 0 1.61 1.61 0 01-1.61 1.61m0-6.11C15 2 13 4 13 6.5c0 3.37 4.5 8.36 4.5 8.36S22 9.87 22 6.5C22 4 20 2 17.5 2m0 14c-1.27 0-2.4.8-2.82 2H9.32a3 3 0 00-3.82-1.83A3.003 3.003 0 003.66 20a3.017 3.017 0 003.84 1.83c.85-.3 1.5-.98 1.82-1.83h5.37c.55 1.56 2.27 2.38 3.81 1.83A3 3 0 0020.35 18c-.43-1.2-1.57-2-2.85-2m0 4.5A1.5 1.5 0 0116 19a1.5 1.5 0 011.5-1.5A1.5 1.5 0 0119 19a1.5 1.5 0 01-1.5 1.5z" />
-                                        </svg>
-                                        <p className="text-sm font-medium text-gray-500">{Number(restaurant.distance) > 1 ? `${Number(restaurant.distance).toFixed(2)} km` : `${(Number(restaurant.distance) * 1000).toFixed(0)} m`}</p>
-                                        </div>
-                                    </div>
-                                    <div className="mt-4 flex items-center justify-between gap-4">
-                                        <div className="flex items-center gap-2">
-                                        <svg
-                                        viewBox="0 0 16 16"
-                                        fill="currentColor"
-                                        height="1em"
-                                        width="1em"
-                                        
-                                        >
-                                        <path
-                                            fill="currentColor"
-                                            d="M15.25 0h-6c-.412 0-.989.239-1.28.53L.531 7.969a.752.752 0 000 1.061l6.439 6.439a.752.752 0 001.061 0L15.47 8.03c.292-.292.53-.868.53-1.28v-6a.753.753 0 00-.75-.75zM11.5 6a1.5 1.5 0 11.001-3.001A1.5 1.5 0 0111.5 6z"
-                                        />
-                                        </svg>
-                                        <p className="text-0.8xl leading-tight text-gray-900">{Number(restaurant.dishPrices.lowest)}-{Number(restaurant.dishPrices.highest)} VNĐ</p>
-                                        </div>
-                                    </div>
-                            </div>
-                        </div>
-                    ))}
-
+                        ))}
+                    </div>
                 </div>
-            {/* List nhà hàng*/}
-
-            </div>
             </section>
-            </div>
-    )
+        </div>
+    );
 };
 
 export default Restaurants;
