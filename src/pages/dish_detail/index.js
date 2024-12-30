@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Header from "../../shared/components/header";
 import { useNavigate, useParams } from "react-router-dom";
+import Comment from "../../shared/components/comment"
 // import { getDishById } from "../../services/restaurantDetail";
 // import { DeleteFavoriteAPI, GetFavoriteAPI, PostFavoriteAPI } from "../../services/userApi";
 // import { getTokenFromLocalStorage } from "../../services/localtoken";
@@ -232,41 +233,7 @@ const DishDetail = () => {
                         </div>
 
                         {/* Ingredients Section - Redesigned */}
-                        <div className="bg-white rounded-xl shadow-md p-6">
-                            <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-                                <svg className="w-6 h-6 mr-2 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                                </svg>
-                                Thành phần
-                            </h2>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                {dishData.ingredients.map((section, index) => (
-                                    <div 
-                                        key={index}
-                                        className="bg-gradient-to-br from-orange-50 to-white rounded-xl p-6 border border-orange-100 hover:shadow-md transition-all duration-300"
-                                    >
-                                        <h3 className="font-bold text-lg text-gray-900 mb-4 pb-2 border-b border-orange-200">
-                                            {section.category}
-                                        </h3>
-                                        <ul className="space-y-3">
-                                            {section.items.map((item, idx) => (
-                                                <li 
-                                                    key={idx}
-                                                    className="flex items-center gap-3 text-gray-700"
-                                                >
-                                                    <span className="flex-shrink-0 w-6 h-6 flex items-center justify-center bg-orange-100 rounded-full">
-                                                        <svg className="w-4 h-4 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-                                                        </svg>
-                                                    </span>
-                                                    <span className="font-medium">{item}</span>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
+                        <Comment id={1}/>
                     </div>
                 </div>
             </div>

@@ -123,7 +123,7 @@ const Restaurants = () => {
                     {/* Navigation Tabs */}
                     <div className="mb-8">
                         <div className="flex space-x-6 border-b border-gray-200">
-                            {['Phù hợp nhất', 'Gần bạn', 'Đánh giá cao', 'Giá cả rẻ', 'Sale-up', 'Mới mở cửa'].map((tab) => (
+                            {['Phù hợp nhất', 'Gần bạn', 'Đánh giá cao', 'Giá cả rẻ'].map((tab) => (
                                 <button
                                     key={tab}
                                     className="px-4 py-2 text-gray-600 hover:text-gray-900 border-b-2 border-transparent hover:border-orange-500 transition-colors duration-300"
