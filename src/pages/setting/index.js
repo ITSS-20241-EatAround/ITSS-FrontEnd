@@ -57,7 +57,7 @@ const Setting = () => {
                         <p className="font- text-white">Edit your account.</p>
                     </div>
                     <div className="flex justify-center py-4">
-                        <img src="https://www.vlance.vn/uploads/portfolio/view/c4a875224357fa0f1dce59defcb7a42b3d6d2cab1.jpg" alt="User Avatar" className="h-40 w-40 rounded-full border-2 border-gray-300 object-cover"/>
+                        <img src="https://i.pinimg.com/736x/8a/01/cc/8a01cc0579be056ecc8dfa2f07bd42aa.jpg" alt="User Avatar" className="h-40 w-40 rounded-full border-2 border-gray-300 object-cover"/>
                     </div>
                     <hr className="mt-4 mb-8" />
                     <p className="py-2 text-xl font-semibold text-white">Email Address</p>

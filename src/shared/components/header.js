@@ -109,16 +109,12 @@ const Header = () => {
                             {/* Dropdown Menu */}
                             {isDropdownOpen && (
                                 <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg py-1 ring-1 ring-black ring-opacity-5">
-                                    <div className="px-4 py-2 border-b border-gray-100">
-                                        <p className="text-sm text-gray-700 font-medium">John Doe</p>
-                                        <p className="text-xs text-gray-500">john@example.com</p>
-                                    </div>
-                                    <a
-                                        href="#settings"
+                                    <Link
+                                        to="/setting"
                                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 transition-colors duration-200"
                                     >
                                         Settings
-                                    </a>
+                                    </Link>
                                     <button
                                         onClick={() => {
                                             removeTokenFromLocalStorage();

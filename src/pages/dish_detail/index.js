@@ -5,9 +5,14 @@ import Comment from "../../shared/components/comment"
 import { getDishById } from "../../services/restaurantDetail";
 import { DeleteFavoriteAPI, GetFavoriteAPI, PostFavoriteAPI } from "../../services/userApi";
 import { getTokenFromLocalStorage } from "../../services/localtoken";
+import { pipe } from "../../shared/utils/pipe";
 
 const StarRating = ({ rating }) => {
+    console.log(rating);
+    
     const validRating = typeof rating === "number" && rating >= 0 && rating <= 5 ? rating : 0;
+    console.log(validRating);
+    
     const fullStars = Math.floor(validRating);
     const hasHalfStar = validRating % 1 !== 0;
     
@@ -115,13 +120,12 @@ const DishDetail = () => {
                                 </button>
                             </div>
                             <div className="flex items-center gap-3 mb-4">
-                                <StarRating rating={dishData.rating} />
                                 <span className="text-gray-600 font-semibold">
-                                    {dishData.rating} 
+                                    {dishData.description} 
                                 </span>
                             </div>
                             <button className="bg-orange-500 text-white px-6 py-3 rounded-full font-bold text-lg hover:bg-orange-600 transition-colors duration-300">
-                                {dishData?.price?.toLocaleString() || 0}đ
+                                {pipe(dishData?.price?.toLocaleString()) || 0}đ
                             </button>
                         </div>
 
@@ -153,7 +157,7 @@ const DishDetail = () => {
                                                     {restaurantData?.name}
                                                 </h3>
                                                 <div className="flex items-center gap-2 mb-2">
-                                                    <StarRating rating={restaurantData?.rating} />
+                                                    <StarRating rating={+restaurantData?.rating} />
                                                     <span className="text-gray-600 text-sm">
                                                         {restaurantData?.rating} 
                                                     </span>
@@ -177,11 +181,6 @@ const DishDetail = () => {
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                                                 </svg>
                                                 <span className="text-sm text-gray-600">{restaurantData?.address}</span>
-                                            </div>
-                                            <div className="flex items-center gap-2">
-                                                <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                </svg>
                                             </div>
                                         </div>
                                     </div>
