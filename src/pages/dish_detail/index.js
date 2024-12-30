@@ -160,7 +160,7 @@ const DishDetail = () => {
                                                 </div>
                                             </div>
                                             <button 
-                                                onClick={() => navigate(`/restaurant-detail/${restaurantData?.id}`)}
+                                                onClick={() => navigate(`/restaurant-detail/${restaurantData?.restaurant_id}`)}
                                                 className="text-orange-500 hover:text-orange-600 font-medium flex items-center gap-1"
                                             >
                                                 Xem nhà hàng

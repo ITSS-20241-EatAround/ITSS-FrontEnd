@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import Header from "../../shared/components/header";
-// import { restaurantDetail } from "../../services/restaurantDetail";
+import { restaurantDetail } from "../../services/restaurantDetail";
 import { useNavigate, useParams } from "react-router-dom";
 // import { getTokenFromLocalStorage } from "../../services/localtoken";
 
 const StarRating = ({ rating }) => {
-  const fullStars = Math.floor(rating);
-  const hasHalfStar = rating % 1 !== 0;
+  const validRating = Math.max(0, Math.min(rating, 5)); 
+  const fullStars = Math.floor(validRating);
+  const hasHalfStar = validRating % 1 !== 0;
 
   return (
     <div className="flex items-center">
@@ -33,38 +34,19 @@ const StarRating = ({ rating }) => {
 const RestaurantDetail = () => {
   const navigate = useNavigate();
   const { id } = useParams();
-
-  // Updated mock data
-  const restaurantData = {
-    name: "The Good Eggs Cafe",
-    rating: 4.5,
-    reviews: 5000,
-    image: "/restaurant1.jpg",
-    address: "123 Food Street, District 1, Ho Chi Minh City",
-    distance: 1.5,
-    priceRange: {
-      min: 15000,
-      max: 100000
-    },
-    description: "Breakfast & Brunch • $$ • Open 8:30 AM",
-    menu: [
-      {
-        name: "Bacon, Egg, and Cheese Sandwich",
-        price: 12.99,
-        image: "/ramen.jpg"
-      },
-      {
-        name: "Pancakes",
-        price: 11.99,
-        image: "/ramen.jpg"
-      },
-      {
-        name: "Avocado Toast",
-        price: 13.99,
-        image: "/ramen.jpg"
-      },
-    ]
-  };
+  const [restaurantData, setRestaurantData] = useState('');
+  useEffect(() => {
+    const fetchDish = async () => {
+      try {
+        const data = await restaurantDetail(id);
+        setRestaurantData(data.data)
+        console.log(restaurantData)
+      } catch (error) {
+        throw error.message;
+      }
+    }
+    fetchDish();
+  }, [id])
 
   // Mock data for menu items
   const menuItems = [
@@ -124,23 +106,7 @@ const RestaurantDetail = () => {
     }
   ];
 
-  /* Commented API calls
-  useEffect(() => {
-    const token = getTokenFromLocalStorage();
-    if (!token) {
-      navigate('/login');
-    }
-    const fetchData = async () => {
-      try {
-        const data = await restaurantDetail(id);
-        setRestaurantData(data);
-      } catch (error) {
-        console.error(error.message);
-      }
-    }
-    fetchData();
-  }, [id]);
-  */
+
 
   return (
     <div 
@@ -157,8 +123,8 @@ const RestaurantDetail = () => {
         <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-xl overflow-hidden mb-8">
           <div className="h-[300px] relative">
             <img 
-              src={restaurantData.image}
-              alt={restaurantData.name}
+              src={restaurantData?.restaurant?.image_url}
+              alt={restaurantData?.restaurant?.name}
               className="w-full h-full object-cover"
             />
           </div>
@@ -166,12 +132,12 @@ const RestaurantDetail = () => {
             {/* Restaurant Name and Rating */}
             <div className="mb-6">
               <h1 className="text-3xl font-bold text-gray-900 mb-3">
-                {restaurantData.name}
+                {restaurantData?.restaurant?.name}
               </h1>
               <div className="flex items-center gap-2">
-                <StarRating rating={restaurantData.rating} />
+                <StarRating rating={restaurantData?.restaurant?.rating} />
                 <span className="text-gray-600">
-                  {restaurantData.rating} ({restaurantData.reviews.toLocaleString()} đánh giá)
+                  {restaurantData?.restaurant?.rating}
                 </span>
               </div>
             </div>
@@ -187,7 +153,7 @@ const RestaurantDetail = () => {
                   </svg>
                   <div>
                     <p className="font-medium text-gray-900">Địa chỉ</p>
-                    <p className="text-gray-600">{restaurantData.address}</p>
+                    <p className="text-gray-600">{restaurantData?.restaurant?.address}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
@@ -196,7 +162,7 @@ const RestaurantDetail = () => {
                   </svg>
                   <div>
                     <p className="font-medium text-gray-900">Khoảng cách</p>
-                    <p className="text-gray-600">{restaurantData.distance} km</p>
+                    <p className="text-gray-600">{restaurantData?.restaurant?.distance} km</p>
                   </div>
                 </div>
               </div>
@@ -207,18 +173,12 @@ const RestaurantDetail = () => {
                   <svg className="w-6 h-6 text-orange-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
-                  <div>
-                    <p className="font-medium text-gray-900">Mức giá</p>
-                    <p className="text-gray-600">
-                      {restaurantData.priceRange.min.toLocaleString()}đ - {restaurantData.priceRange.max.toLocaleString()}đ
-                    </p>
-                  </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <svg className="w-6 h-6 text-orange-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
-                  <p className="text-gray-600">{restaurantData.description}</p>
+                  <p className="text-gray-600">{restaurantData?.restaurant?.description}</p>
                 </div>
               </div>
             </div>
@@ -230,7 +190,7 @@ const RestaurantDetail = () => {
           <div className="mb-12">
             <h2 className="text-2xl font-bold text-gray-900 mb-6">Best Sellers</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-              {restaurantData.menu.slice(0, 3).map((item, index) => (
+              {restaurantData?.menu?.slice(0, 3).map((item, index) => (
                 <div 
                   key={index}
                   className="bg-white/90 backdrop-blur-sm rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"

@@ -72,8 +72,8 @@ const FavoritePage = () => {
                         {/* Image Container */}
                         <div className="relative h-48">
                             <img 
-                                src={dish?.image_url}
-                                alt={dish?.name}
+                                src={dish?.dish?.image_url}
+                                alt={dish?.dish?.name}
                                 className="w-full h-full object-cover"
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
@@ -81,12 +81,12 @@ const FavoritePage = () => {
                             {/* Restaurant Badge */}
                             <div className="absolute top-4 left-4 flex items-center bg-white/90 backdrop-blur-sm rounded-full p-2">
                                 <img 
-                                    src={dish?.restaurant?.image_url}
-                                    alt={dish?.restaurant?.name}
+                                    src={dish?.dish?.restaurant?.image_url}
+                                    alt={dish?.dish?.restaurant?.name}
                                     className="w-6 h-6 rounded-full object-cover"
                                 />
                                 <span className="ml-2 text-sm font-medium text-gray-900">
-                                    {dish?.restaurant?.name}
+                                    {dish?.dish?.restaurant?.name}
                                 </span>
                             </div>
                         </div>
@@ -96,7 +96,7 @@ const FavoritePage = () => {
                             <div className="flex justify-between items-start mb-4">
                                 <div>
                                     <h3 className="text-xl font-bold text-gray-900 mb-2">
-                                        {dish.name}
+                                        {dish?.dish?.name}
                                     </h3>
                                     <div className="flex items-center gap-2">
                                         <div className="flex items-center">
@@ -104,7 +104,7 @@ const FavoritePage = () => {
                                                 <svg 
                                                     key={i}
                                                     className={`w-4 h-4 ${
-                                                        i < Math.floor(dish.rating) 
+                                                        i < Math.floor(dish?.dish?.rating) 
                                                             ? 'text-yellow-400' 
                                                             : 'text-gray-300'
                                                     }`}
@@ -121,14 +121,14 @@ const FavoritePage = () => {
                                     </div>
                                 </div>
                                 <span className="text-lg font-bold text-orange-500">
-                                    {dish?.price?.toLocaleString() || 0}đ
+                                    {dish?.dish?.price?.toLocaleString() || 0}đ
                                 </span>
                             </div>
 
                             {/* Action Buttons */}
                             <div className="flex items-center justify-between">
                                 <button 
-                                    onClick={() => navigate(`/dish-detail/${dish.id}`)}
+                                    onClick={() => navigate(`/dish-detail/${dish.dish_id}`)}
                                     className="text-orange-500 hover:text-orange-600 font-medium"
                                 >
                                     Xem chi tiết →
