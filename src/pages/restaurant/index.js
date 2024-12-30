@@ -2,7 +2,28 @@ import { useState } from "react";
 import Header from "../../shared/components/header";
 import Draggable from "react-draggable";
 import { useNavigate } from 'react-router-dom';
-
+import { RestaurantSuggest } from "../../services/suggestApi";
+import { getTokenFromLocalStorage } from "../../services/localtoken";
+import { useEffect } from "react";
+import { getRestaurants } from "../../services/restaurant";
+function getUserLocation() {
+    return new Promise((resolve, reject) => {
+        if(!navigator.geolocation){
+            return reject(new Error('Cannot get location'));
+        }
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                resolve({
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude,
+                });
+            },
+            (error) => {
+                reject(error.message);
+            }
+        )
+    })
+}
 const Restaurants = () => {
     const navigate = useNavigate();
     const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -11,88 +32,99 @@ const Restaurants = () => {
         distance: "",
         rating: "",
     });
-
-    // Mock data for restaurants
-    const restaurantList = [
-        {
-            restaurant_id: 1,
-            name: "Pasta Pesto",
-            image_url: "/restaurant1.jpg",
-            rating: 4.5,
-            address: "1234 Main St, San Francisco, CA",
-            distance: 0.8,
-            dishPrices: {
-                lowest: 20000,
-                highest: 50000
-            },
-            description: "Authentic Italian cuisine with a modern twist. Known for handmade pasta and fresh ingredients."
-        },
-        {
-            restaurant_id: 2,
-            name: "Taco Time",
-            image_url: "/restaurant2.jpg",
-            rating: 4.2,
-            address: "5678 Market St, San Francisco, CA",
-            distance: 1.2,
-            dishPrices: {
-                lowest: 15000,
-                highest: 40000
-            },
-            description: "Best Mexican street food in town. Fresh ingredients, daily made tortillas."
-        },
-        // Thêm 3 nhà hàng mới
-        {
-            restaurant_id: 3,
-            name: "Sushi Master",
-            image_url: "/restaurant1.jpg",
-            rating: 4.8,
-            address: "789 Sushi Lane, San Francisco, CA",
-            distance: 0.5,
-            dishPrices: {
-                lowest: 25000,
-                highest: 150000
-            },
-            description: "Premium Japanese sushi restaurant with fresh seafood imported daily. Expert sushi chefs with 20+ years experience."
-        },
-        {
-            restaurant_id: 4,
-            name: "Pho Delights",
-            image_url: "/restaurant1.jpg",
-            rating: 4.6,
-            address: "321 Asian Avenue, San Francisco, CA",
-            distance: 1.5,
-            dishPrices: {
-                lowest: 18000,
-                highest: 45000
-            },
-            description: "Authentic Vietnamese cuisine featuring traditional pho and spring rolls. Family recipes passed down through generations."
-        },
-        {
-            restaurant_id: 5,
-            name: "BBQ Kingdom",
-            image_url: "/restaurant1.jpg",
-            rating: 4.7,
-            address: "456 Grill Street, San Francisco, CA",
-            distance: 2.0,
-            dishPrices: {
-                lowest: 30000,
-                highest: 200000
-            },
-            description: "Premium BBQ restaurant specializing in smoked meats and homemade sauces. Perfect for meat lovers and family gatherings."
+    const [error, setError] = useState(null);
+    const [restaurantList, setRestaurantList] = useState([]);
+    const [activeTab, setActiveTab] = useState('Phù hợp nhất');
+    const handleTabClick = (tab) => {
+        setActiveTab(tab);
+        switch (tab) {
+            case 'Phù hợp nhất':
+                fetchResSuggest();
+                break;
+            case 'Gần bạn':
+                setFilters((prev) => ({
+                    ...prev,
+                    distance: '< 1km', 
+                }));
+                break;
+            case 'Đánh giá cao':
+                setFilters((prev) => ({
+                    ...prev,
+                    rating: '5 sao', 
+                }));
+                break;
+            case 'Giá cả rẻ':
+                setFilters((prev) => ({
+                    ...prev,
+                    price: 'Thấp', 
+                }));
+                break;
+            default:
+                setFilters({});
         }
-    ];
-
-    const toggleFilter = () => {
-        setIsFilterOpen(!isFilterOpen);
     };
-
-    const handleFilterChange = (e) => {
-        const { name, value } = e.target;
-        setFilters((prevFilters) => ({
-            ...prevFilters,
-            [name]: prevFilters[name] === value ? "" : value,
-        }));
+    const fetchResSuggest = async () => {
+        try {
+            const location = await getUserLocation();
+            const latitude = location.latitude;
+            const longitude = location.longitude;
+            const response = await RestaurantSuggest(latitude, longitude);
+            setRestaurantList(response.data.slice(0, 3));
+            console.log(restaurantList);
+            setError(null);
+        } catch (error) {
+            setError("Error fetching restaurants.");
+        }
+    }
+    const fetchRestaurant = async () => {
+        try {
+            const location = await getUserLocation();
+            const latitude = location.latitude;
+            const longitude = location.longitude;
+            console.log(latitude, longitude);
+            const response = await getRestaurants(latitude, longitude);
+            let filteredRestaurants = response.data;
+            switch (activeTab) {
+                case "Gần bạn":
+                    filteredRestaurants = filteredRestaurants.filter(
+                        restaurant => restaurant.distance < 1 // Lọc nhà hàng gần nhất (<1km)
+                    );
+                    break;
+    
+                case "Đánh giá cao":
+                    filteredRestaurants = filteredRestaurants.filter(
+                        restaurant => restaurant.rating <= 5 && restaurant.rating >=3  // Lọc nhà hàng có đánh giá cao nhất (>=5 sao)
+                    );
+                    break;
+    
+                case "Giá cả rẻ":
+                    filteredRestaurants = filteredRestaurants.filter(
+                        restaurant => restaurant.dishPrices.highest <= 20000 // Lọc nhà hàng có giá rẻ (<=20,000 VND)
+                    );
+                    break;
+                default:
+                 
+                    break;
+            }
+    
+            // Cập nhật danh sách nhà hàng sau khi lọc
+            setRestaurantList(filteredRestaurants);
+            setError(null);
+        } catch (error) {
+            setError("Error fetching restaurants.");
+        }
     };
+    
+    useEffect(() => {
+        const token = getTokenFromLocalStorage();
+        if (!token) {
+            navigate('/login');
+        }
+        
+            fetchRestaurant();
+ 
+
+    }, [filters])
 
     return (
         <div 
@@ -126,6 +158,7 @@ const Restaurants = () => {
                             {['Phù hợp nhất', 'Gần bạn', 'Đánh giá cao', 'Giá cả rẻ'].map((tab) => (
                                 <button
                                     key={tab}
+                                    onClick={() => handleTabClick(tab)}
                                     className="px-4 py-2 text-gray-600 hover:text-gray-900 border-b-2 border-transparent hover:border-orange-500 transition-colors duration-300"
                                 >
                                     {tab}
@@ -183,7 +216,8 @@ const Restaurants = () => {
                                         </div>
                                         <div className="flex justify-between items-center mt-4">
                                             <div className="text-orange-500 font-semibold">
-                                                {restaurant.dishPrices.lowest.toLocaleString()}đ - {restaurant.dishPrices.highest.toLocaleString()}đ
+                                            {(restaurant?.dishPrices.lowest || 0).toLocaleString()}đ - {(restaurant?.dishPrices.highest || 0).toLocaleString()}đ
+
                                             </div>
                                             <button className="bg-gray-700 text-white px-4 py-2 rounded-full hover:bg-black transition-colors duration-300">
                                                 View Menu

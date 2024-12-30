@@ -9,3 +9,5 @@ export const DeleteFavoriteAPI = (id, config) => Http.delete(`/user/favorite/${i
 export const GetCommentAPI = (id, config) => Http.get(`/user/comment/${id}`, config);
 
 export const PostCommentAPI = (config) => Http.post(`/user/comment`, config);
+
+export const UserFavoriteFoodAPI = (config) => Http.get(`/user/favorite/user-dish`, config);

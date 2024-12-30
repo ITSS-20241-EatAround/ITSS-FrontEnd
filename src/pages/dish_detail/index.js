@@ -2,13 +2,14 @@ import React, { useState, useEffect } from "react";
 import Header from "../../shared/components/header";
 import { useNavigate, useParams } from "react-router-dom";
 import Comment from "../../shared/components/comment"
-// import { getDishById } from "../../services/restaurantDetail";
-// import { DeleteFavoriteAPI, GetFavoriteAPI, PostFavoriteAPI } from "../../services/userApi";
-// import { getTokenFromLocalStorage } from "../../services/localtoken";
+import { getDishById } from "../../services/restaurantDetail";
+import { DeleteFavoriteAPI, GetFavoriteAPI, PostFavoriteAPI } from "../../services/userApi";
+import { getTokenFromLocalStorage } from "../../services/localtoken";
 
 const StarRating = ({ rating }) => {
-    const fullStars = Math.floor(rating);
-    const hasHalfStar = rating % 1 !== 0;
+    const validRating = typeof rating === "number" && rating >= 0 && rating <= 5 ? rating : 0;
+    const fullStars = Math.floor(validRating);
+    const hasHalfStar = validRating % 1 !== 0;
     
     return (
         <div className="flex items-center">
@@ -26,61 +27,33 @@ const DishDetail = () => {
     const navigate = useNavigate();
     const { id } = useParams();
     const [isFavorite, setIsFavorite] = useState(false);
-
-    // Mock data
-    const dishData = {
-        name: "Tonkotsu Ramen",
-        rating: 4.8,
-        reviews: 1450,
-        image: "/ramen.jpg",
-        description: "A rich, umami-filled broth that's made by boiling pork bones for 12 hours. It's usually topped with a slice of chashu, a hand-seasoned boiled egg, menma (bamboo shoots), and negi (green onions).",
-        price: 125000,
-        ingredients: [
-            {
-                category: "Noodles",
-                items: ["Fresh, chewy ramen noodles"]
-            },
-            {
-                category: "Broth",
-                items: ["Slow-cooked pork broth", "Seasoned soy sauce"]
-            },
-            {
-                category: "Toppings",
-                items: ["Chashu pork", "Soft-boiled egg", "Green onions", "Bamboo shoots"]
-            },
-            {
-                category: "Optional Toppings",
-                items: ["Chopped scallions", "Nori seaweed"]
-            }
-        ]
-    };
-
-    // Thêm mock data cho restaurant
-    const restaurantData = {
-        id: 1,
-        name: "The Good Eggs Cafe",
-        rating: 4.5,
-        reviews: 1200,
-        image: "/restaurant1.jpg",
-        address: "123 Food Street, District 1, Ho Chi Minh City",
-        distance: 1.5,
-        priceRange: {
-            min: 15000,
-            max: 100000
+    const [dishData, setDishData] = useState("");
+    const [restaurantData, setRestaurant] = useState("");
+    const toggleFavorite = () => {
+        if (!isFavorite) {
+            PostFavoriteAPI(id, {}).then(() => {
+                setIsFavorite((prev) => !prev);
+            }).catch((error) => {
+                console.log(error);
+            });
+        } else {
+            DeleteFavoriteAPI(id, {}).then(() => {
+                setIsFavorite((prev) => !prev);
+            }).catch((error) => {
+                console.log(error);
+            });
         }
     };
-
-    /* Commented API calls
     useEffect(() => {
-        const token = getTokenFromLocalStorage();
-        if (!token) {
-            navigate('/login');
-        }
+
         getDishById(id).then(({ data }) => {
-            setDish(data);
+            console.log(data)
+            setDishData(data.data);
+            setRestaurant(data.data.restaurant);
+            console.log(dishData, restaurantData);
         });
     }, [id]);
-    */
+
 
     return (
         <div 
@@ -96,8 +69,8 @@ const DishDetail = () => {
                     {/* Hero Image */}
                     <div className="h-[400px] relative">
                         <img 
-                            src={dishData.image}
-                            alt={dishData.name}
+                            src={dishData?.image_url}
+                            alt={dishData?.name}
                             className="w-full h-full object-cover"
                         />
                     </div>
@@ -108,12 +81,12 @@ const DishDetail = () => {
                         <div className="bg-white rounded-xl shadow-md p-6">
                             <div className="flex justify-between items-start">
                                 <h1 className="text-4xl font-bold text-gray-900 mb-4">
-                                    {dishData.name}
+                                    {dishData?.name}
                                 </h1>
                                 
                                 {/* Favorite Button */}
                                 <button 
-                                    onClick={() => setIsFavorite(!isFavorite)}
+                                    onClick={toggleFavorite}
                                     className={`group relative p-3 rounded-xl transition-all duration-300 ${
                                         isFavorite ? 'bg-red-50' : 'hover:bg-gray-100'
                                     }`}
@@ -144,11 +117,11 @@ const DishDetail = () => {
                             <div className="flex items-center gap-3 mb-4">
                                 <StarRating rating={dishData.rating} />
                                 <span className="text-gray-600 font-semibold">
-                                    {dishData.rating} ({dishData.reviews.toLocaleString()} đánh giá)
+                                    {dishData.rating} 
                                 </span>
                             </div>
                             <button className="bg-orange-500 text-white px-6 py-3 rounded-full font-bold text-lg hover:bg-orange-600 transition-colors duration-300">
-                                {dishData.price.toLocaleString()}đ
+                                {dishData?.price?.toLocaleString() || 0}đ
                             </button>
                         </div>
 
@@ -166,8 +139,8 @@ const DishDetail = () => {
                                     {/* Restaurant Image */}
                                     <div className="w-24 h-24 flex-shrink-0">
                                         <img 
-                                            src={restaurantData.image}
-                                            alt={restaurantData.name}
+                                            src={restaurantData?.image_url}
+                                            alt={restaurantData?.name}
                                             className="w-full h-full object-cover rounded-lg"
                                         />
                                     </div>
@@ -177,17 +150,17 @@ const DishDetail = () => {
                                         <div className="flex justify-between items-start">
                                             <div>
                                                 <h3 className="text-xl font-bold text-gray-900 mb-2">
-                                                    {restaurantData.name}
+                                                    {restaurantData?.name}
                                                 </h3>
                                                 <div className="flex items-center gap-2 mb-2">
-                                                    <StarRating rating={restaurantData.rating} />
+                                                    <StarRating rating={restaurantData?.rating} />
                                                     <span className="text-gray-600 text-sm">
-                                                        {restaurantData.rating} ({restaurantData.reviews.toLocaleString()} đánh giá)
+                                                        {restaurantData?.rating} 
                                                     </span>
                                                 </div>
                                             </div>
                                             <button 
-                                                onClick={() => navigate(`/restaurant-detail/${restaurantData.id}`)}
+                                                onClick={() => navigate(`/restaurant-detail/${restaurantData?.id}`)}
                                                 className="text-orange-500 hover:text-orange-600 font-medium flex items-center gap-1"
                                             >
                                                 Xem nhà hàng
@@ -203,15 +176,12 @@ const DishDetail = () => {
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                                                 </svg>
-                                                <span className="text-sm text-gray-600">{restaurantData.address}</span>
+                                                <span className="text-sm text-gray-600">{restaurantData?.address}</span>
                                             </div>
                                             <div className="flex items-center gap-2">
                                                 <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                                 </svg>
-                                                <span className="text-sm text-gray-600">
-                                                    {restaurantData.priceRange.min.toLocaleString()}đ - {restaurantData.priceRange.max.toLocaleString()}đ
-                                                </span>
                                             </div>
                                         </div>
                                     </div>
@@ -228,12 +198,12 @@ const DishDetail = () => {
                                 Mô tả
                             </h2>
                             <p className="text-gray-600 leading-relaxed">
-                                {dishData.description}
+                                {dishData?.description}
                             </p>
                         </div>
 
                         {/* Ingredients Section - Redesigned */}
-                        <Comment id={1}/>
+                        <Comment id={id}/>
                     </div>
                 </div>
             </div>

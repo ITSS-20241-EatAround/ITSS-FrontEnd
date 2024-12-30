@@ -1,88 +1,23 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../shared/components/header';
-
+import { DishSuggest } from '../../services/suggestApi';
 const DashBoard = () => {
     const navigate = useNavigate();
     const [currentSlide, setCurrentSlide] = useState(0);
+    const [dish, setDish] = useState([]);
     
-    // Mock data cho featured dish
-    const featuredDish = {
-        id: 1,
-        name: "Today's Suggested Dish",
-        description: "Authentic Japanese ramen with special noodles and fresh ingredients, served in a savory broth",
-        image: "/ramen.jpg"
-    };
-
-    // Mock data cho recommended dishes (9 món)
-    const recommendedDishes = [
-        {
-            id: 1,
-            name: "Spicy Chicken Sandwich",
-            price: "89.000",
-            description: "Bánh mì gà cay với sốt đặc biệt",
-            image: "garan.jpg"
-        },
-        {
-            id: 2,
-            name: "Vegan Burrito Bowl",
-            price: "129.000",
-            description: "Bữa ăn thuần chay giàu dinh dưỡng",
-            image: "comrang.jpg"
-        },
-        {
-            id: 3,
-            name: "Fresh Ahi Poke Bowl",
-            price: "149.000",
-            description: "Cá ngừ tươi với cơm Nhật",
-            image: "bunrieu.jpg"
-        },
-        {
-            id: 4,
-            name: "Beef Steak",
-            price: "259.000",
-            description: "Bò bít tết Úc thượng hạng",
-            image: "bunrieu.jpg"
-        },
-        {
-            id: 5,
-            name: "Salmon Sashimi",
-            price: "189.000",
-            description: "Cá hồi tươi sống nhập khẩu",
-            image: "bunrieu.jpg"
-        },
-        {
-            id: 6,
-            name: "Pad Thai",
-            price: "119.000",
-            description: "Phở xào Thái truyền thống",
-            image: "bunrieu.jpg"
-        },
-        {
-            id: 7,
-            name: "BBQ Ribs",
-            price: "229.000",
-            description: "Sườn nướng BBQ kiểu Mỹ",
-            image: "bunrieu.jpg"
-        },
-        {
-            id: 8,
-            name: "Seafood Pasta",
-            price: "169.000",
-            description: "Mỳ Ý hải sản tươi ngon",
-            image: "bunrieu.jpg"
-        },
-        {
-            id: 9,
-            name: "Duck Confit",
-            price: "199.000",
-            description: "Vịt om kiểu Pháp",
-            image: "bunrieu.jpg"
+    useEffect(() => {
+        const fetchData = async () => {
+            console.log('call')
+            const data = await DishSuggest();
+            setDish(data.data.data || []);
+            console.log(dish)
         }
-    ];
+        fetchData();
+    }, [])
 
-    const slidesCount = Math.ceil(recommendedDishes.length / 3);
-
+    const slidesCount = dish?.length ? Math.ceil(dish.length / 3) : 1;
     const nextSlide = () => {
         setCurrentSlide((prev) => (prev + 1) % slidesCount);
     };
@@ -104,15 +39,15 @@ const DashBoard = () => {
             <div className="max-w-6xl mx-auto px-4 py-8">
                 <div className="relative rounded-xl overflow-hidden shadow-2xl hover:shadow-3xl transition-shadow duration-300 bg-white/80 backdrop-blur-sm">
                     <img 
-                        src={featuredDish.image} 
+                        src={dish[0]?.image_url} 
                         alt="Featured Dish" 
                         className="w-full h-[500px] object-cover"
                     />
                     <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-8">
-                        <h2 className="text-white text-4xl font-bold mb-3">{featuredDish.name}</h2>
-                        <p className="text-white text-lg mb-4">{featuredDish.description}</p>
+                        <h2 className="text-white text-4xl font-bold mb-3">{dish[0]?.name}</h2>
+                        <p className="text-white text-lg mb-4">{dish[0]?.description}</p>
                         <button 
-                            onClick={() => navigate(`/dish-detail/${featuredDish.id}`)}
+                            onClick={() => navigate(`/dish-detail/${dish[0].dish_id}`)}
                             className="bg-orange-500 text-white px-6 py-2 rounded-full hover:bg-orange-600 transition-colors duration-300"
                         >
                             Xem chi tiết
@@ -142,21 +77,21 @@ const DashBoard = () => {
                         <div className="overflow-hidden">
                             <div 
                                 className="flex transition-transform duration-500 ease-in-out"
-                                style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+                                style={{ transform: `translateX(-${currentSlide * 100}%)` }} 
                             >
                                 {/* Wrap all slides in a container */}
-                                {[...Array(Math.ceil(recommendedDishes.length / 3))].map((_, index) => (
+                                {[...Array(Math.ceil(dish.length / 3))].map((_, index) => (
                                     <div key={index} className="grid grid-cols-3 gap-8 w-full flex-shrink-0">
-                                        {recommendedDishes
+                                        {dish
                                             .slice(index * 3, (index * 3) + 3)
                                             .map((dish) => (
                                                 <div 
-                                                    key={dish.id}
+                                                    key={dish.dish_id}
                                                     className="rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 bg-white/90 backdrop-blur-sm"
                                                 >
                                                     <div className="relative">
                                                         <img 
-                                                            src={dish.image} 
+                                                            src={dish.image_url} 
                                                             alt={dish.name} 
                                                             className="w-full h-48 object-cover"
                                                         />
@@ -169,7 +104,7 @@ const DashBoard = () => {
                                                         <div className="flex justify-between items-center">
                                                             <span className="text-sm text-gray-600">{dish.description}</span>
                                                             <button 
-                                                                onClick={() => navigate(`/dish-detail/${dish.id}`)}
+                                                                onClick={() => navigate(`/dish-detail/${dish.dish_id}`)}
                                                                 className="text-orange-500 hover:text-orange-600 font-medium"
                                                             >
                                                                 Xem chi tiết →
