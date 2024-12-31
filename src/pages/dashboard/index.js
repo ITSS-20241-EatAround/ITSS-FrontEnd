@@ -44,14 +44,25 @@ const DashBoard = () => {
                         className="w-full h-[500px] object-cover"
                     />
                     <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-8">
-                        <h2 className="text-white text-4xl font-bold mb-3">{dish[0]?.name}</h2>
-                        <p className="text-white text-lg mb-4">{dish[0]?.description}</p>
-                        <button 
-                            onClick={() => navigate(`/dish-detail/${dish[0].dish_id}`)}
-                            className="bg-orange-500 text-white px-6 py-2 rounded-full hover:bg-orange-600 transition-colors duration-300"
-                        >
-                            Xem chi tiết
-                        </button>
+                        <h2 className="text-white text-5xl font-bold mb-3">
+                            Today Suggested Dish
+                        </h2>
+
+                        <p className="text-white text-lg mb-6">
+                            {dish[0]?.description}
+                        </p>
+                        
+                        <div className="flex items-center justify-between">
+                            <h3 className="text-4xl font-bold text-orange-500">
+                                {dish[0]?.name}
+                            </h3>
+                            <button 
+                                onClick={() => navigate(`/dish-detail/${dish[0]?.dish_id}`)}
+                                className="bg-orange-500 text-white px-6 py-2 rounded-full hover:bg-orange-600 transition-colors duration-300"
+                            >
+                                Xem chi tiết
+                            </button>
+                        </div>
                     </div>
                 </div>
 
