@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Header from "../../shared/components/header";
 import { restaurantDetail, restaurantGetById } from "../../services/restaurantDetail";
 import { useNavigate, useParams } from "react-router-dom";
+import { pipe } from "../../shared/utils/pipe";
 // import { getTokenFromLocalStorage } from "../../services/localtoken";
 function getUserLocation() {
   return new Promise((resolve, reject) => {
@@ -203,7 +204,7 @@ const RestaurantDetail = () => {
                     />
                     <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
                       <h3 className="text-white font-semibold text-lg mb-1">{item.name}</h3>
-                      <p className="text-white font-medium">${item.price}</p>
+                      <p className="text-white font-medium">{pipe(item.price)}đ</p>
                     </div>
                   </div>
                 </div>
@@ -261,7 +262,7 @@ const RestaurantDetail = () => {
                     <p className="text-sm text-gray-500 mb-2">{item.description}</p>
                     <div className="flex justify-between items-center">
                       <span className="text-orange-500 font-bold">
-                        {item.price.toLocaleString()}đ
+                        {pipe(item.price)}đ
                       </span>
                     </div>
                   </div>

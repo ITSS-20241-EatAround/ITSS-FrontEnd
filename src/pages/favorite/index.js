@@ -4,6 +4,7 @@ import Header from '../../shared/components/header';
 import { UserFavoriteFoodAPI } from '../../services/userApi';
 import { useEffect} from 'react';
 import { DeleteFavoriteAPI } from '../../services/userApi';
+import { pipe } from '../../shared/utils/pipe';
 const FavoritePage = () => {
     const navigate = useNavigate();
     const [favoriteDishes, setFavoriteDishes] = useState([]);
@@ -105,7 +106,7 @@ const FavoritePage = () => {
                                     </div>
                                 </div>
                                 <span className="text-lg font-bold text-orange-500">
-                                    {dish?.dish?.price?.toLocaleString() || 0}đ
+                                    {pipe(dish.dish.price)}đ
                                 </span>
                             </div>
 

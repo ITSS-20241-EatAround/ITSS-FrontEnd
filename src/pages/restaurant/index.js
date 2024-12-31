@@ -6,6 +6,7 @@ import { RestaurantSuggest } from "../../services/suggestApi";
 import { getTokenFromLocalStorage } from "../../services/localtoken";
 import { useEffect } from "react";
 import { getRestaurants } from "../../services/restaurant";
+import { pipe } from "../../shared/utils/pipe";
 function getUserLocation() {
     return new Promise((resolve, reject) => {
         if(!navigator.geolocation){
@@ -216,7 +217,7 @@ const Restaurants = () => {
                                         </div>
                                         <div className="flex justify-between items-center mt-4">
                                             <div className="text-orange-500 font-semibold">
-                                            {(restaurant?.dishPrices.lowest || 0).toLocaleString()}đ - {(restaurant?.dishPrices.highest || 0).toLocaleString()}đ
+                                            {pipe(restaurant?.dishPrices.lowest)}đ - {pipe(restaurant?.dishPrices.highest)}đ
 
                                             </div>
                                             <button className="bg-gray-700 text-white px-4 py-2 rounded-full hover:bg-black transition-colors duration-300">
