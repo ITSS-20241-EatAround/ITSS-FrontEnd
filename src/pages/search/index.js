@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Header from "../../shared/components/header";
 import { search } from "../../services/search";
+import { pipe } from "../../shared/utils/pipe";
 const Search = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -57,7 +58,7 @@ const Search = () => {
                     />
                     <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full">
                       <span className="text-orange-500 font-semibold">
-                        {item.price.toLocaleString()}đ
+                        {pipe(item.price)}đ
                       </span>
                     </div>
                   </div>
