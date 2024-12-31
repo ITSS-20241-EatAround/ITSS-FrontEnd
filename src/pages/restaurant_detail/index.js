@@ -189,7 +189,7 @@ const RestaurantDetail = () => {
           <div className="mb-12">
             <h2 className="text-2xl font-bold text-gray-900 mb-6">Best Sellers</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-              {dish?.map((item, index) => (
+              {dish?.slice(0,3).map((item, index) => (
                 <div 
                   key={index}
                   onClick={() => handleItemClick(item.dish_id)}
