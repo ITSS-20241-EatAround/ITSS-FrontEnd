@@ -1,11 +1,10 @@
 import Http from "./http";
 
-export const search = async (keyword, filters = {}) => {
+export const search = async (keyword) => {
     try {
         const response = await Http.get(`/dish/search`, {
             params: {
                 keyword,
-                ...filters,
             },
         });
         return response.data;
