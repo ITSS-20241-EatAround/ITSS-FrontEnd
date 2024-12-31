@@ -39,6 +39,9 @@ const Restaurants = () => {
     const handleTabClick = (tab) => {
         setActiveTab(tab);
         switch (tab) {
+            case 'Tất cả':
+                fetchRestaurant();
+                break;
             case 'Phù hợp nhất':
                 fetchResSuggest();
                 break;
@@ -100,7 +103,7 @@ const Restaurants = () => {
     
                 case "Giá cả rẻ":
                     filteredRestaurants = filteredRestaurants.filter(
-                        restaurant => restaurant.dishPrices.highest <= 20000 // Lọc nhà hàng có giá rẻ (<=20,000 VND)
+                        restaurant => restaurant.dishPrices.highest <= 40000
                     );
                     break;
                 default:
@@ -156,7 +159,7 @@ const Restaurants = () => {
                     {/* Navigation Tabs */}
                     <div className="mb-8">
                         <div className="flex space-x-6 border-b border-gray-200">
-                            {['Phù hợp nhất', 'Gần bạn', 'Đánh giá cao', 'Giá cả rẻ'].map((tab) => (
+                            {['Tất cả', 'Phù hợp nhất', 'Gần bạn', 'Đánh giá cao', 'Giá cả rẻ'].map((tab) => (
                                 <button
                                     key={tab}
                                     onClick={() => handleTabClick(tab)}

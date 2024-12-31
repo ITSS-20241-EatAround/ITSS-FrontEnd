@@ -49,7 +49,7 @@ const DishDetail = () => {
     const [dishData, setDishData] = useState("");
     const [restaurantData, setRestaurant] = useState("");
     useEffect(() => {
-        const favoriteStatus = localStorage.getItem(`favorite_${id}`);
+        const favoriteStatus = localStorage.getItem(`favoriteFood_${id}`);
         setIsFavorite(favoriteStatus === 'true');
     }, [id]);
     const toggleFavorite = () => {
@@ -57,7 +57,7 @@ const DishDetail = () => {
             PostFavoriteAPI(id, {}).then(() => {
                 setIsFavorite(true);
                 // Lưu trạng thái yêu thích vào localStorage
-                localStorage.setItem(`favorite_${id}`, 'true');
+                localStorage.setItem(`favoriteFood_${id}`, 'true');
             }).catch((error) => {
                 console.log(error);
             });
@@ -65,7 +65,7 @@ const DishDetail = () => {
             DeleteFavoriteAPI(id, {}).then(() => {
                 setIsFavorite(false);
                 // Xóa trạng thái yêu thích khỏi localStorage
-                localStorage.setItem(`favorite_${id}`, 'false');
+                localStorage.setItem(`favoriteFood_${id}`, 'false');
             }).catch((error) => {
                 console.log(error);
             });
